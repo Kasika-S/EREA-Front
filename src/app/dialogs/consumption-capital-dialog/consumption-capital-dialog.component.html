@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>SAIDI</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="flex flex-col flex-auto bg-white overflow-hidden">
+    <div class="flex flex-col items-center hover:cursor-pointer text-md font-medium bg-primary text-primary px-8 py-6">
+      <span class="text-lg text-primary-300">ADD SAIDI</span>
+    </div>
+
+    <div class="w-full p-4 mt-4">
+      <form [formGroup]="userTariffForm" (ngSubmit)="saveInfo()">
+        <div class="flex flex-col flex-auto">
+          <!-- Name -->
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>consumption_per_capita</mat-label>
+              <input matInput placeholder="tariff" [formControlName]="'consumption_per_capita'" />
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field appearance="outline" class="w-full">
+                  <mat-label>Country</mat-label>
+                  <input (input)="getCountry()" type="text" matInput
+                        [formControlName]="'country'"
+                        [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                        @for (country of country ; track trackByFn) {
+                        <mat-option [value]="country">{{country.name}}</mat-option>
+                        }
+                  </mat-autocomplete>
+            </mat-form-field>
+         </div>
+
+          <div class="flex items-center justify-end sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-b">
+            <button mat-stroked-button [matDialogClose]="'cancelled'">
+              Cancel
+            </button>
+
+            <!-- Save -->
+            <button class="m-2" mat-flat-button [color]="'primary'" [matTooltip]="'Save'" type="submit">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>

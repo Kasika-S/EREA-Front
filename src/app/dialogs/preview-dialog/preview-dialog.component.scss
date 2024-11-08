@@ -1,0 +1,57 @@
+/* preview-dialog.component.css */
+
+table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    td {
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
+    
+    mat-dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+ 
+/* preview-dialog.component.css */
+
+/* Style for the entire mat-dialog-actions section */
+mat-dialog-actions {
+      display: flex;
+      justify-content: flex-end; /* Aligns buttons to the right */
+      padding: 30px; /* Adds some padding around the buttons */
+      gap: 10px; /* Adds space between buttons */
+    }
+    
+    /* Style for individual buttons */
+    button {
+      padding: 8px 16px; /* Adds padding inside buttons */
+      margin: 16px 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    /* Custom styles for specific buttons */
+    button[color="primary"] {
+      background-color: #3f51b5; /* Primary color */
+      color: white;
+    }
+    
+    button[color="primary"]:hover {
+      background-color: #303f9f; /* Darker shade on hover */
+    }
+    
+    button {
+      border: 1px solid #ccc;
+      color: #555; /* Default color */
+    }
+    
+    button:hover {
+      background-color: #f0f0f0; /* Light gray on hover */
+    }
+        
