@@ -29,11 +29,21 @@
               "src/favicon.ico",
               "src/assets"
             ],
+            "stylePreprocessorOptions": {
+               "includePaths": ["src/styles"]
+            },
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles/tailwind.scss",
+              "src/styles/themes.scss",
+              "src/styles/main.scss",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/aos/dist/aos.js"
+            ],
+            "allowedCommonJsDependencies": [
+                "aos"
+            ]
           },
           "configurations": {
             "production": {
@@ -91,8 +101,7 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "src/styles.scss"            
             ],
             "scripts": []
           }

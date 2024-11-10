@@ -1,0 +1,181 @@
+<div class="container">
+    <div class="flex items-center justify-between py-5 lg:py-0">
+        <a routerLink="/"><img src="/assets/images/logo.png" alt="logo" class="h-14" /></a>
+        <div class="flex items-center">
+            <div (click)="toggleMenu()" class="overlay fixed inset-0 z-[51] bg-black/60 lg:hidden" [ngClass]="{ hidden: !showMenu }"></div>
+            <div class="menus" [ngClass]="{'overflow-y-auto ltr:!right-0 rtl:!left-0': showMenu }">
+                <div class="border-b border-gray/10 ltr:text-right rtl:text-left lg:hidden">
+                    <button (click)="toggleMenu()" type="button" class="p-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="h-6 w-6 text-black dark:text-white"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <ul (click)="showMenu = false">
+                    
+                    <!-- <li>
+                        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"> Home </a>
+                    </li>
+                    <li>
+                        <a routerLink="/portfolio" routerLinkActive="active" > Portfolio </a>
+                    </li>
+                    <li>
+                        <a routerLink="/services" routerLinkActive="active" > Service </a>
+                    </li>
+                        <a routerLink="/team" routerLinkActive="active"> Team </a>
+                    </li>
+                    <li>
+                        <a routerLink="/about-us" routerLinkActive="active"> About Us </a>
+                    </li> -->
+                    <li class="group relative" (click)="$event.stopPropagation()">
+                        <a
+                            href="javascript:;"
+                            [ngClass]="{ active: router.url === '/crypto'
+                            || router.url === '/modern-saas'
+                            || router.url === '/real-estate'
+                            || router.url === '/healthcare'
+                            || router.url === '/marketing'
+                            || router.url === '/application'
+                            || router.url === '/hotel-resort'
+                            || router.url === '/nft'
+                        }"
+                        >
+                            Our services
+                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="submenu" (click)="showMenu = false">
+                            <a routerLink="/major-service" routerLinkActive="active">Major Services</a>
+                            <a routerLink="/other-service" routerLinkActive="active">Other services</a>
+                        </div>
+                    </li>
+                    <li class="group relative" (click)="$event.stopPropagation()">
+                        <a
+                            href="javascript:;"
+                            [ngClass]="{ active: router.url === '/crypto'
+                            || router.url === '/modern-saas'
+                            || router.url === '/real-estate'
+                            || router.url === '/healthcare'
+                            || router.url === '/marketing'
+                            || router.url === '/application'
+                            || router.url === '/hotel-resort'
+                            || router.url === '/nft'
+                        }"
+                        >
+                            Our Projects
+                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="submenu" (click)="showMenu = false">
+                            <a routerLink="/project" routerLinkActive="active">KAPPU APP</a>
+                        </div>
+                    </li>
+                    <li class="group relative" (click)="$event.stopPropagation()">
+                        <a
+                            href="javascript:;"
+                            [ngClass]="{ active: router.url === '/crypto'
+                            || router.url === '/modern-saas'
+                            || router.url === '/real-estate'
+                            || router.url === '/healthcare'
+                            || router.url === '/marketing'
+                            || router.url === '/application'
+                            || router.url === '/hotel-resort'
+                            || router.url === '/nft'
+                        }"
+                        >
+                            #TTLearnings
+                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="submenu" (click)="showMenu = false">
+                            <a routerLink="/crypto" routerLinkActive="active">whats TTLearnings</a>
+                            <a routerLink="/crypto" routerLinkActive="active">Courses under TTLearnings</a>
+                        </div>
+                    </li>
+
+                    <li class="group relative" (click)="$event.stopPropagation()">
+                        <a
+                            href="javascript:;"
+                            [ngClass]="{ active: router.url === '/crypto'
+                            || router.url === '/modern-saas'
+                            || router.url === '/real-estate'
+                            || router.url === '/healthcare'
+                            || router.url === '/marketing'
+                            || router.url === '/application'
+                            || router.url === '/hotel-resort'
+                            || router.url === '/nft'
+                        }"
+                        >
+                            Company
+                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="submenu" (click)="showMenu = false">
+                            <a routerLink="/mission-vision" routerLinkActive="active">Mission, Vision & Values</a>
+                            <a routerLink="/ceo-message" routerLinkActive="active">Message from Managing Director</a>
+                            <a (click)="openPdf()" routerLinkActive="active">Company profile</a>
+                            <a routerLink="/corporate-story" routerLinkActive="active">Our cooperate story</a>
+                            <a routerLink="/our-partners" routerLinkActive="active"> Patnerships</a>
+                            <!-- <a routerLink="/application" routerLinkActive="active">Careers</a> -->
+                            <a routerLink="/news" routerLinkActive="active">News</a>
+                            <a routerLink="/contact-us" routerLinkActive="active">Contact us</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <button type="button" class="flex h-10 w-10 items-center justify-center rounded-full bg-primary lg:hidden" (click)="toggleMenu()">
+                <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
+                    <path
+                        d="M2 15H11C11.552 15 12 15.447 12 16C12 16.553 11.552 17 11 17H2C1.448 17 1 16.553 1 16C1 15.447 1.448 15 2 15Z"
+                        fill="currentColor"
+                    />
+                    <path d="M2 8H20C20.552 8 21 8.447 21 9C21 9.553 20.552 10 20 10H2C1.448 10 1 9.553 1 9C1 8.447 1.448 8 2 8Z" fill="currentColor" />
+                    <path d="M21 2C21 1.447 20.552 1 20 1H7C6.448 1 6 1.447 6 2C6 2.553 6.448 3 7 3H20C20.552 3 21 2.553 21 2Z" fill="currentColor" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
