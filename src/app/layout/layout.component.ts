@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, Navigation, Router, RouterOutlet } from "@angular/router";
 import { Subject } from "rxjs";
-import { VerticalComponent } from "../@erea/components/navigation/vertical/vertical.component";
+import { VerticalComponent } from "../../@erea/components/navigation/vertical/vertical.component";
 
 @Component({
   selector: 'layout',

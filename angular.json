@@ -30,12 +30,12 @@
               "src/assets"
             ],
             "stylePreprocessorOptions": {
-               "includePaths": ["src/styles"]
+               "includePaths": ["src/@erea/styles"]
             },
             "styles": [
-              "src/styles/tailwind.scss",
-              "src/styles/themes.scss",
-              "src/styles/main.scss",
+              "src/@erea/styles/tailwind.scss",
+              "src/@erea/styles/themes.scss",
+              "src/@erea/styles/main.scss",
               "src/styles.scss"
             ],
             "scripts": [

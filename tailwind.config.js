@@ -15,22 +15,6 @@ module.exports = {
       lg: '1024px',
       xl: '1142px',
   },
-  // fontFamily: {
-  //     mulish: ['Mulish', 'sans-serif'],
-  //     reey: ['reey', 'sans-serif'],
-  // },
-  // colors: {
-  //     transparent: 'transparent',
-  //     current: 'currentColor',
-  //     white: '#ffffff',
-  //     black: '#08111F',
-  //     primary: '#ec0000',
-  //     secondary: '#ecca00',
-  //     // gray: {
-  //     //     DEFAULT: '#7780A1',
-  //     //     dark: '#1C2331',
-  //     // },
-  // },
     extend: {
       colors: {
         primary: {
@@ -42,7 +26,10 @@ module.exports = {
         black: '#08111F',
         card: '#FFFFFF',
         disabled: colors.slate[400],
-        default: colors.slate[100],
+        gray: {
+          DEFAULT: '#7780A1',
+          dark: '#1C2331',
+        },
         accent: {
           ...colors.slate,
           DEFAULT: colors.slate[800],
@@ -56,14 +43,18 @@ module.exports = {
       animation: {
         'spin-slow': 'spin 5s linear infinite',
     },
-    // typography: ({ theme }) => ({
-    //     DEFAULT: {
-    //         css: {
-    //             color: theme('colors.gray'),
-    //             fontSize: '1.125rem',
-    //         },
-    //     },
-    // }),
+    fontFamily: {
+      mulish: ['Mulish', 'sans-serif'],
+      reey: ['reey', 'sans-serif'],
+  },
+    typography: ({ theme }) => ({
+        DEFAULT: {
+            css: {
+                color: theme('colors.gray'),
+                fontSize: '1.125rem',
+            },
+        },
+    }),
 
       fontSize: {
         'xs'  : '0.625rem',

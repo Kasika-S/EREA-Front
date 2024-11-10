@@ -1,10 +1,14 @@
 <div class="container">
     <div class="flex items-center justify-between py-5 lg:py-0">
-        <a routerLink="/"><img src="/assets/images/logo.png" alt="logo" class="h-14" /></a>
+        <a routerLink="/">
+            <h2 class="text-4xl text-white font-extrabold leading-normal sm:text-5xl lg:!text-[40px] lg:leading-[90px]">
+                EREA
+              </h2>
+        </a>
         <div class="flex items-center">
             <div (click)="toggleMenu()" class="overlay fixed inset-0 z-[51] bg-black/60 lg:hidden" [ngClass]="{ hidden: !showMenu }"></div>
-            <div class="menus" [ngClass]="{'overflow-y-auto ltr:!right-0 rtl:!left-0': showMenu }">
-                <div class="border-b border-gray/10 ltr:text-right rtl:text-left lg:hidden">
+            <div class="menus" [ngClass]="{'overflow-y-auto !right-0 rtl:!left-0': showMenu }">
+                <div class="border-b border-gray/10 text-right rtl:text-left lg:hidden">
                     <button (click)="toggleMenu()" type="button" class="p-4">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +52,7 @@
                         }"
                         >
                             Our services
-                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                            <div class="transition duration-500 group-hover:rotate-180 ml-2 rtl:mr-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
@@ -79,7 +83,7 @@
                         }"
                         >
                             Our Projects
-                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                            <div class="transition duration-500 group-hover:rotate-180 ml-2 rtl:mr-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
@@ -109,7 +113,7 @@
                         }"
                         >
                             #TTLearnings
-                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                            <div class="transition duration-500 group-hover:rotate-180 ml-2 rtl:mr-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"
@@ -141,7 +145,7 @@
                         }"
                         >
                             Company
-                            <div class="transition duration-500 group-hover:rotate-180 ltr:ml-2 rtl:mr-2">
+                            <div class="transition duration-500 group-hover:rotate-180 ml-2 rtl:mr-2">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M19 9L12 15L10.25 13.5M5 9L7.33333 11"

@@ -37,12 +37,12 @@
         }
 
         .ql-picker-label {
-            @apply text-default;
+            // @apply text-default;
         }
 
         .ql-picker-options {
             .ql-picker-item {
-                @apply text-default;
+                // @apply text-default;
             }
         }
     }
@@ -129,7 +129,7 @@
         }
 
         input {
-            @apply text-default rounded-sm border-gray-300 bg-white #{'!important'};
+            // @apply text-default rounded-sm border-gray-300 bg-white #{'!important'};
 
             .dark & {
                 @apply border-gray-500 bg-gray-700 #{'!important'};
