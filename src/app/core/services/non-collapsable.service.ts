@@ -89,6 +89,14 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/user-tariffs/`, data);
   }
 
+  getUserTariffsSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('country', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/user-tariffs-sum/${year}/`, { params });
+  }
+
   getGenerationMix(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -104,6 +112,14 @@ export class NonCollapsableService {
 
   addGenerationMix(data: any) {
     return this.http.post<any>(`${this.apiUrl}/generation-mix/`, data);
+  }
+
+  getGenerationMixSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('country', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/generation-mix-sum/${year}/`, { params });
   }
 
   getSaidi(pageNumber: number, pageSize: number, searchQuery: string) {
@@ -123,6 +139,14 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/saidi/`, data);
   }
 
+  getSaidiSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('country', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/saidi-sum/${year}/`, { params });
+  }
+
   getSaifi(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -138,6 +162,14 @@ export class NonCollapsableService {
 
   addSaifi(data: any) {
     return this.http.post<any>(`${this.apiUrl}/saifi/`, data);
+  }
+
+  getSaifiSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('country', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/saifi-sum/${year}/`, { params });
   }
 
   getInstalledCapacity(pageNumber: number, pageSize: number, searchQuery: string) {

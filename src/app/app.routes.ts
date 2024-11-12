@@ -17,6 +17,11 @@ import { OurProjectComponent } from './modules/user-side/pages/our-project/our-p
 import { ServiceDetailsComponent } from './modules/user-side/pages/service-details/service-details.component';
 import { NewsComponent } from './modules/user-side/pages/news/news.component';
 import { HomeComponent } from './modules/user-side/home/home.component';
+import { PetroleumChartComponent } from './modules/user-side/pages/charts/petroleum/petroleum.component';
+import { UserTariffsChartComponent } from './modules/user-side/pages/charts/user-tariffs/user-tariffs.component';
+import { GenerationMixChartComponent } from './modules/user-side/pages/charts/generation-mix/generation-mix.component';
+import { SaidiChartComponent } from './modules/user-side/pages/charts/saidi/saidi.component';
+import { SaifiChartComponent } from './modules/user-side/pages/charts/saifi/saifi.component';
 
 export const routes: Routes = [
       // {
@@ -67,6 +72,11 @@ export const routes: Routes = [
                               { path: 'project', component: OurProjectComponent, title: 'Our Project' },
                               { path: 'service-details', component: ServiceDetailsComponent, title: 'Service Detail' },
                               { path: 'news', component: NewsComponent, title: 'News' },
+                              { path: 'chart/petroleum', component: PetroleumChartComponent, title: 'Petroleum Chart' },
+                              { path: 'chart/user-tariff', component: UserTariffsChartComponent, title: 'User Tariffs Chart' },
+                              { path: 'chart/generation-mix', component: GenerationMixChartComponent, title: 'User Tariffs Chart' },
+                              { path: 'chart/saidi', component: SaidiChartComponent, title: 'User Tariffs Chart' },
+                              { path: 'chart/saifi', component: SaifiChartComponent, title: 'User Tariffs Chart' },
                         ]
                   },
             ]

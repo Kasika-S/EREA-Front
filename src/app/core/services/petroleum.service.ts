@@ -106,6 +106,13 @@ export class PetroleumService {
     return this.http.post<any>(`${this.apiUrl}/petroleum-price/`, data);
   }
 
+  getPetroleumMontlyPriceSum(year: string, product:any) {
+    let params = new HttpParams();
+    if(product){
+      params = params.set('petroleum_product', product);
+    }
+    return this.http.get<any>(`${this.apiUrl}/monthly-petroleum-sum/${year}/`, { params });
+  }
 
   getVolumeImports(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
@@ -124,6 +131,14 @@ export class PetroleumService {
 
   addVolumeImports(data: any) {
     return this.http.post<any>(`${this.apiUrl}/volume-imports/`, data);
+  }
+
+  getImportVolumeSum(year: string, product:any) {
+    // let params = new HttpParams();
+    // if(product){
+    //   params = params.set('petroleum_product', product);
+    // }
+    return this.http.get<any>(`${this.apiUrl}/volume-imports-sum/${year}/`);
   }
 
 
