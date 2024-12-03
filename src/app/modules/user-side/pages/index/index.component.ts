@@ -1,21 +1,58 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BlogSliderComponent } from '../../components/blog-slider/blog-slider.component';
+import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
+import { EChartsOption } from 'echarts';
+import * as echarts from 'echarts';
+import * as africaMap from "./africa-geojson.json"
+import { GenerationMixChartComponent } from '../charts/generation-mix/generation-mix.component';
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { NonCollapsableService } from '../../../../core/services/non-collapsable.service';
+
+interface Year {
+  value: string;
+  viewValue: string;
+}
+
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [BlogSliderComponent, RouterLink],
+  imports: [BlogSliderComponent, RouterLink, NgxEchartsDirective,
+    FormsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatInputModule,
+    MatButtonModule,
+    MatAutocompleteModule
+  ],
   templateUrl: './index.component.html',
-  styleUrl: './index.component.scss'
+  styleUrl: './index.component.scss',
+  providers: [
+    provideEcharts(),
+  ]
 })
-export class IndexComponent implements AfterViewInit{
+export class IndexComponent implements AfterViewInit, OnInit{
   storeData: any;
   activeTab = 'all';
 
+  mapOptions: EChartsOption = {};
+  mapData: any = africaMap;
+
+
   @ViewChild('textElement', { static: false }) textElement!: ElementRef;
 
-  words: string[] = ['Innovation', 'Creativity', 'Support']; // Add your words here
+  words: string[] = ['Energy Data', 'Transparency', 'Interoperability','Regional Cooperation','Sustainability','Sustainability','Knowledge Sharing']; // Add your words here
   currentWordIndex = 0;
   currentWord = this.words[0];
   // state = 'hidden';
@@ -24,20 +61,185 @@ export class IndexComponent implements AfterViewInit{
 //     // this.initStore();
 // }
 
-constructor(private renderer: Renderer2) {
-  // this.initStore();
-}
 
-// async initStore() {
-//     this.store
-//         .select((d) => d.index)
-//         .subscribe((d) => {
-//             this.storeData = d;
-//         });
-// }
+
+constructor(private renderer: Renderer2, private nonCollapsableService: NonCollapsableService){}
+ 
+selectedYear: string = "2024";
+ 
+chartOption: EChartsOption;
+xData:any;
+yData:any;
+dataPresent:any;
 
   ngAfterViewInit() {
     this.cycleWords();
+
+  }
+
+  ngOnInit(): void {
+    this.getConsumptionPerCapita(this.selectedYear);
+    this.getConnectedCustomers(this.selectedYear,"")
+
+  }
+
+  year: Year[] = [
+    {value: '2024', viewValue: '2024'},
+    {value: '2023', viewValue: '2023'},
+    {value: '2022', viewValue: '2022'},
+  ];
+
+  onYearChange(event: MatSelectChange) {
+    console.log('Year selected:', event.value)
+    this.getConnectedCustomers(event.value, "")
+  }
+
+  getConnectedCustomers(year:string, product:any) {
+    this.nonCollapsableService.getConnectedCustomersSum(year).subscribe(
+      {
+        next: (response) => {
+          this.dataPresent = response
+          this.xData = response.map((item: { country: any; }) => item.country);
+          this.yData = response.map((item: { total_connected_customers: any; }) => item.total_connected_customers);
+          console.log("testing data", this.dataPresent.length)
+        },
+        error: (error) => {
+          console.log(error.message)
+        },
+        complete: () => {
+          this.chartOption = {
+          //   title: {
+          //     text: 'Basic Bar Chart with Labels',
+          //     left: 'center'
+          // },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow' // Shows a shadow line for the bar
+            }
+        },
+            xAxis: {
+              type: 'category',
+              data: this.xData,
+              name: 'Country',             // Label for x-axis
+              nameLocation: 'middle',    // Position the label in the middle
+              nameTextStyle: {
+              fontWeight: 'bold',
+              padding: 20             // Padding to adjust distance from the axis
+        }
+            },
+            yAxis: {
+              type: 'value',
+              name: 'Connected Users (In Millions)',    // Label for y-axis
+              nameLocation: 'middle',    // Position the label in the middle
+              nameRotate: 90,            // Rotate the label for vertical alignment
+              nameTextStyle: {
+                  fontWeight: 'bold',
+                  padding: 30             // Padding to adjust distance from the axis
+              }
+            },
+            series: [
+              {
+                name: 'Connected Users',
+                data: this.yData,
+                type: 'bar',
+                label: {
+                  show: true,
+                  position: 'top', // Position labels on top of the bars
+                  color: '#000',   // Customize label color
+                  fontWeight: 'bold',
+                  fontSize: 12
+              },
+              itemStyle: {
+                color: '#5470C6', // Customize bar color
+                borderRadius: [4, 4, 0, 0] // Rounded top corners for bars
+            }
+              }
+            ]
+          };
+        }
+      }
+    )
+  }
+
+  getConsumptionPerCapita(year:string) {
+    this.nonCollapsableService.getConsumptionPerCapitalSum(year).subscribe(
+      {
+        next: (response) => {
+          // this.dataPresent = response
+          this.xData = response.map((item: { country: any; }) => item.country);
+
+          this.dataPresent = response.map((item: { country: any; total_consumption_per_capita: any; }) => 
+            ({
+            name: item.country,
+            value: item.total_consumption_per_capita,
+            itemStyle: {
+              areaColor: '#49C75C'
+            }
+            })
+        )
+
+          console.log("testing map", this.dataPresent)
+        },
+        error: (error) => {
+          console.log(error.message)
+        },
+        complete: () => {
+          echarts.registerMap('africa', this.mapData);
+
+          this.mapOptions = {
+      
+            // title: {
+            //   text: 'East Africa Connected Users',
+            //   subtext: 'Data from eac',
+            //   left: 'right',
+            // },
+            tooltip: {
+              trigger: 'item',
+              formatter: '{b}: {c}',
+            },
+            // toolbox: {
+            //   show: true,
+            //   left: 'left',
+            //   top: 'top',
+            //   feature: {
+            //     dataView: { readOnly: false },
+            //     restore: {},
+            //     saveAsImage: {}
+            //   }
+            // },
+            toolbox: {
+              show: true,
+              orient: 'vertical',
+              left: 'right',
+              top: 'center',
+              feature: {
+                dataView: { readOnly: false },
+                restore: {},
+                saveAsImage: {}
+              }
+            },
+            series: [
+              {
+                name: 'East Africa Estimates',
+                type: 'map',
+                roam: false,
+                map: 'africa', // Ensure the Africa map is loaded correctly
+                emphasis: {
+                  label: {
+                    show: true
+                  }
+                },
+                label: {
+                  show: true
+                },
+                data: this.dataPresent
+              }
+            ]
+          };
+        }
+      }
+    )
   }
 
   cycleWords() {

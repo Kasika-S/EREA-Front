@@ -87,6 +87,10 @@ export class PetroleumService {
     return this.http.post<any>(`${this.apiUrl}/petroleum-products/`, data);
   }
 
+  deletePetroleumProducts(id: any) {
+    return this.http.delete<any>(`${this.apiUrl}/petroleum-products/${id}`);
+  }
+
   getPetroleumPrice(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -114,6 +118,14 @@ export class PetroleumService {
     return this.http.get<any>(`${this.apiUrl}/monthly-petroleum-sum/${year}/`, { params });
   }
 
+  getMonthlyPetroleumPrices(year: string, country_id:any) {
+    let params = new HttpParams();
+    if (country_id) {
+      params = params.set('county_ids', country_id);
+    }
+    return this.http.get<any>(`${this.apiUrl}/monthly-petroleum-prices/${year}/`, { params });
+  }
+
   getVolumeImports(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -133,12 +145,12 @@ export class PetroleumService {
     return this.http.post<any>(`${this.apiUrl}/volume-imports/`, data);
   }
 
-  getImportVolumeSum(year: string, product:any) {
-    // let params = new HttpParams();
-    // if(product){
-    //   params = params.set('petroleum_product', product);
-    // }
-    return this.http.get<any>(`${this.apiUrl}/volume-imports-sum/${year}/`);
+  getImportVolumeSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/volume-imports-sum/${year}/`, { params });
   }
 
 

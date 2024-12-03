@@ -1,5 +1,5 @@
 <div class="overflow-x-hidden">
-      <div class="overflow-hidden bg-black pt-[82px] sm:-mx-[250px] sm:rounded-b-[50%] lg:-mx-[150px] lg:pt-[106px]">
+      <!-- <div class="overflow-hidden bg-black pt-[82px] sm:-mx-[250px] sm:rounded-b-[50%] lg:-mx-[150px] lg:pt-[106px]">
 
             <div class="container relative bg-[url(/assets/images/world-map.png)] bg-cover">
                   <div class="flex flex-col items-center gap-7 lg:flex-row">
@@ -11,7 +11,7 @@
                         </div>
                   </div>
             </div>
-      </div>
+      </div> -->
 
       <section
             class="bg-gradient-to-b from-transparent to-white/[55%] py-10 dark:bg-gradient-to-t dark:from-white/5 dark:to-transparent lg:py-20">
@@ -35,22 +35,19 @@
 
                         <mat-form-field class="w-1/2">
                               <mat-label>Country</mat-label>
-                              <input (input)="getCountry($event)" type="text" matInput
-                              [(ngModel)]="selectedCountry"
-                                    [matAutocomplete]="auto1">
-                              <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onCountrySelected($event)">
-                                    @for (country of country ; track trackByFn) {
-                                    <mat-option [value]="country">{{country.name}}</mat-option>
+                              <mat-select [formControl]="country" multiple>
+                                    @for (country of countryList ; track trackByFn) {
+                                          <mat-option (click)="onCountryClicked($event,country)" [value]="country.id">{{country.name}}</mat-option>
                                     }
-                              </mat-autocomplete>
-                        </mat-form-field>
+                              </mat-select>
+                        </mat-form-field> 
                     </div>
                             
                   </div>
             </div>
       </section>
 
-      <section class="relative pt-14 lg:pb-48 lg:pt-[100px]">
+      <section class="relative bg-white pt-14 lg:pb-48 lg:pt-[100px]">
 
             @if (this.isDataPresent.length == 0) {
                   <div class="flex items-center justify-center bg-gray-100 p-4">

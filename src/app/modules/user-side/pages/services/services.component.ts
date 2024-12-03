@@ -1,4 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { SwiperOptions } from 'swiper/types';
+
 
 @Component({
   selector: 'app-services',
@@ -9,7 +11,7 @@ import { Component, ViewChild } from '@angular/core';
 })
 export class ServicesComponent {
   storeData: any;
-  // @ViewChild('modal') modal: ModalDialog | undefined;
+  // @ViewChild('modal') modal: any | undefined;
   // config: SwiperOptions = {
   //     loop: true,
   //     slidesPerView: 'auto',

@@ -11,8 +11,9 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { NonCollapsableService } from '../../../../../core/services/non-collapsable.service';
 
 interface Year {
   value: string;
@@ -24,8 +25,8 @@ interface Year {
   standalone: true,
   imports: [CommonModule, NgxEchartsDirective,
       FormsModule,
+      ReactiveFormsModule,
       MatIconModule,
-      NgClass,
       MatFormFieldModule,
       MatSelectModule,
       MatOptionModule,
@@ -40,6 +41,12 @@ interface Year {
   ]
 })
 export class PetroleumChartComponent implements OnInit{
+
+  country = new FormControl();
+  countryList: any[] = [];
+
+  selectedValues: number[] = [];
+
   selectedYear: string = "2024";
   selectedProduct: string;
 
@@ -64,16 +71,52 @@ export class PetroleumChartComponent implements OnInit{
     {value: '2022', viewValue: '2022'},
   ];
 
-  constructor(private petroleumService: PetroleumService){}
+  labelOption: any = {
+    show: true,
+    position: 'insideBottom',
+    distance: 15,
+    align: 'left',
+    verticalAlign: 'middle',
+    rotate: 90,
+    formatter: '{c}  {name|{a}}',
+    fontSize: 16,
+    rich: {
+      name: {}
+    }
+  };
+
+  constructor(private petroleumService: PetroleumService, private nonCollapsableService: NonCollapsableService){}
 
   ngOnInit(): void {
-    this.getPetroleumPrice(this.selectedYear,"")
+    this.petroleumService.getMonthlyPetroleumPrices(this.selectedYear,"").subscribe((data: any) => {
+      this.renderChart(data);
+    });
     this.getVolumeImport(this.selectedYear,"")
+    this.getCountry()
+  }
+
+  getCountry() {
+    this.nonCollapsableService.getCountry(1, 10,"").subscribe(
+      {
+        next: (response) => {
+          this.countryList = response.results
+        },
+        error: (error) => {
+          console.log(error.message)
+        },
+        complete: () => {
+          // this.isLoading = false
+        }
+      }
+    )
   }
 
   onYearChange(event: MatSelectChange) {
     console.log('Year selected:', event.value)
-    this.getPetroleumPrice(event.value, "")
+    // this.getPetroleumPrice(event.value, "")
+    this.petroleumService.getMonthlyPetroleumPrices(event.value,this.selectedValues).subscribe((data: any) => {
+      this.renderChart(data);
+    });
     this.getVolumeImport(event.value,"")
   }
 
@@ -81,79 +124,83 @@ export class PetroleumChartComponent implements OnInit{
     const selectedProduct = event.option.value;
     console.log('Selected product:', selectedProduct);
     console.log('Selected product 2:', selectedProduct.name);
-    this.getPetroleumPrice(this.selectedYear, selectedProduct.id)
-  }
-  
-  getPetroleumPrice(year:string, product:any) {
-    this.petroleumService.getPetroleumMontlyPriceSum(year,product).subscribe(
-      {
-        next: (response) => {
-          this.isDataPresent = response
-          this.xData = response.map((item: { monthly: any; }) => item.monthly);
-          this.yData = response.map((item: { total_price: any; }) => item.total_price);
-          console.log("testing data", this.isDataPresent.length)
-        },
-        error: (error) => {
-          console.log(error.message)
-        },
-        complete: () => {
-          this.chartOption = {
-            title: {
-              text: 'Petroleum Price',
-              left: 'center'
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow' // Shows a shadow line for the bar
-            }
-        },
-            xAxis: {
-              type: 'category',
-              data: this.xData,
-              name: 'Month',             // Label for x-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameTextStyle: {
-              fontWeight: 'bold',
-              padding: 20             // Padding to adjust distance from the axis
-        }
-            },
-            yAxis: {
-              type: 'value',
-              name: 'Price (in USD)',    // Label for y-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameRotate: 90,            // Rotate the label for vertical alignment
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            series: [
-              {
-                name: 'Petroleum Price',
-                data: this.yData,
-                type: 'bar',
-                label: {
-                  show: true,
-                  position: 'top', // Position labels on top of the bars
-                  color: '#000',   // Customize label color
-                  fontWeight: 'bold',
-                  fontSize: 12
-              },
-              itemStyle: {
-                color: '#5470C6', // Customize bar color
-                borderRadius: [4, 4, 0, 0] // Rounded top corners for bars
-            }
-              }
-            ]
-          };
-        }
-      }
-    )
+    // this.getPetroleumPrice(this.selectedYear, selectedProduct.id)
   }
 
-  getVolumeImport(year:string, product:any) {
-    this.petroleumService.getImportVolumeSum(year,product).subscribe(
+  renderChart(data: any): void {
+    const months = data.map((item: any) => item.month);
+    const products: string[] = Array.from(new Set(data.flatMap((item: any) => item.products.map((c: any) => c.product))));
+
+    const filteredProducts = ['Diesel', 'Petrol']; // Only include Diesel and Petrol
+    const series: any = filteredProducts.map((product: string) => {
+      return {
+        name: product,
+        type: 'bar',
+        emphasis: {
+          focus: 'series',
+        },
+        label: this.labelOption,
+        itemStyle: {
+          color: product === 'Diesel' ? '#D2691E' : product === 'Petrol' ? '#38ACEC' : undefined, // Set color based on product
+        },
+        data: data.map((item: any) => {
+          const productData = item.products.find((c: any) => c.product === product);
+          return productData ? productData.price : 0;
+        }),
+      };
+    });
+
+    this.chartOption = {
+      title: {
+        text: 'Price Progression of Petroleum products(US$/Ltr)',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        data: products,
+        top: '10%'
+      },
+      toolbox: {
+        show: true,
+        orient: 'vertical',
+        left: 'right',
+        top: 'center',
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ['line', 'bar', 'stack'] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      xAxis: {
+        type: 'category',
+        data: months,
+        axisLabel: {
+          rotate: 45  // Rotate the labels for better readability
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: 'Price (US$/Ltr)',
+        nameLocation: 'middle',    // Position the label in the middle
+        nameRotate: 90,            // Rotate the label for vertical alignment
+        nameTextStyle: {
+            fontWeight: 'bold',
+            padding: 30             // Padding to adjust distance from the axis
+        }
+      },
+      series: series
+    };
+  }
+
+  getVolumeImport(year:string, country:any) {
+    this.petroleumService.getImportVolumeSum(year,country).subscribe(
       {
         next: (response) => {
           this.isDataPresent = response
@@ -188,7 +235,7 @@ export class PetroleumChartComponent implements OnInit{
             },
             yAxis: {
               type: 'value',
-              name: 'Volume',    // Label for y-axis
+              name: 'Volume (m³)',    // Label for y-axis
               nameLocation: 'middle',    // Position the label in the middle
               nameRotate: 90,            // Rotate the label for vertical alignment
               nameTextStyle: {
@@ -241,6 +288,30 @@ export class PetroleumChartComponent implements OnInit{
         }
       }
     )
+  }
+
+  onCountryClicked(event: any, country: any): void {
+    const index = this.selectedValues.indexOf(country.id);
+
+    if (index === -1) {
+      // Add value if not already selected
+      this.selectedValues.push(country.id);
+    } else {
+      // Remove value if already selected
+      this.selectedValues.splice(index, 1);
+    }
+
+    console.log('Selected Values:', this.selectedValues);
+
+    this.petroleumService.getMonthlyPetroleumPrices(this.selectedYear,this.selectedValues).subscribe((data: any) => {
+      this.renderChart(data);
+    });
+
+    this.getVolumeImport(this.selectedYear,this.selectedValues)
+
+
+    // Update FormControl value
+    this.country.setValue(this.selectedValues);
   }
 
   displayFn(value: any): string {

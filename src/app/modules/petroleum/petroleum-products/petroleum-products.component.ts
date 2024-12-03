@@ -21,6 +21,7 @@ import { PetroleumService } from '../../../core/services/petroleum.service';
 import { PreviewDialogComponent } from '../../../dialogs/preview-dialog/preview-dialog.component';
 
 import * as XLSX from 'xlsx';
+import { DeleteDialogComponent } from '../../../dialogs/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-petroleum-products',
@@ -54,7 +55,7 @@ export class PetroleumProductsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //TABLE
-  displayedColumns: string[] = ['id', 'name'];
+  displayedColumns: string[] = ['id', 'name','more_options'];
   petroleumProduct: any[] = [];
 
   //PAGINATION
@@ -124,6 +125,35 @@ export class PetroleumProductsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openDeleteDialog(id:number) {
+    const dialogRef = this.dialog.open(
+      DeleteDialogComponent,
+      {
+        width: '30%',
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.deleteData(id);
+      }
+    });
+  }
+
+  deleteData(id:number) {
+    this.petroleumService.deletePetroleumProducts(id).subscribe({
+      next: (response) => {
+        console.log('Data deleted!', response);
+      },
+      error: (error) => {
+        console.error('Error uploading file', error);
+      },
+      complete: () => {
+        this.getPetroleumProduct()
+      }
     });
   }
 

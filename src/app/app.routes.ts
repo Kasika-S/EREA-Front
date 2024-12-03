@@ -22,33 +22,34 @@ import { UserTariffsChartComponent } from './modules/user-side/pages/charts/user
 import { GenerationMixChartComponent } from './modules/user-side/pages/charts/generation-mix/generation-mix.component';
 import { SaidiChartComponent } from './modules/user-side/pages/charts/saidi/saidi.component';
 import { SaifiChartComponent } from './modules/user-side/pages/charts/saifi/saifi.component';
+import { ElectricityChartComponent } from './modules/user-side/pages/charts/electricity/electricity.component';
 
 export const routes: Routes = [
-      // {
-      //       path: "",
-      //       component: LayoutComponent,
-      //       children: [
-      //             {
-      //                   path: '', children: [
-      //                         { path: 'petroleum', loadChildren: () => import('../app/modules/petroleum/petroleum.routes') },
-      //                         { path: 'electricity', loadChildren: () => import('./modules/electricity/electricity.routes') },
-      //                         { path: 'user-tariff', loadChildren: () => import('../app/modules/user-tariff/user-tariff.routes') },
-      //                         { path: 'saidi', loadChildren: () => import('./modules/saidi/saidi.routes') },
-      //                         { path: 'saifi', loadChildren: () => import('./modules/saifi/saifi.routes') },
+      {
+            path: "admin",
+            component: LayoutComponent,
+            children: [
+                  {
+                        path: '', children: [
+                              { path: 'petroleum', loadChildren: () => import('../app/modules/petroleum/petroleum.routes') },
+                              { path: 'electricity', loadChildren: () => import('./modules/electricity/electricity.routes') },
+                              { path: 'user-tariff', loadChildren: () => import('../app/modules/user-tariff/user-tariff.routes') },
+                              { path: 'saidi', loadChildren: () => import('./modules/saidi/saidi.routes') },
+                              { path: 'saifi', loadChildren: () => import('./modules/saifi/saifi.routes') },
 
-      //                         { path: 'connected-customers', loadChildren: () => import('../app/modules/connected-customers/connected-customers.routes') },
-      //                         { path: 'consumption-per-capital', loadChildren: () => import('./modules/consumption-per-capital/consumption-per-capital.routes') },
-      //                         { path: 'effective-capacity', loadChildren: () => import('./modules/effective-capacity/effective-capacity.routes') },
+                              { path: 'connected-customers', loadChildren: () => import('../app/modules/connected-customers/connected-customers.routes') },
+                              { path: 'consumption-per-capital', loadChildren: () => import('./modules/consumption-per-capital/consumption-per-capital.routes') },
+                              { path: 'effective-capacity', loadChildren: () => import('./modules/effective-capacity/effective-capacity.routes') },
 
-      //                         { path: 'generation-mix', loadChildren: () => import('./modules/generation-mix/generation-mix.routes') },
-      //                         { path: 'grid-connectivity', loadChildren: () => import('./modules/grid-connectivity/grid-connectivity.routes') },
-      //                         { path: 'installed-capacity', loadChildren: () => import('./modules/installed-capacity/installed-capacity.routes') },
-      //                         { path: 'maximum-demand', loadChildren: () => import('./modules/maximum-demand/maximum-demand.routes') },
-      //                         { path: 'system-load-factor', loadChildren: () => import('./modules/system-load-factor/system-load-factor.routes') },
-      //                   ]
-      //             },
-      //       ]
-      // },
+                              { path: 'generation-mix', loadChildren: () => import('./modules/generation-mix/generation-mix.routes') },
+                              { path: 'grid-connectivity', loadChildren: () => import('./modules/grid-connectivity/grid-connectivity.routes') },
+                              { path: 'installed-capacity', loadChildren: () => import('./modules/installed-capacity/installed-capacity.routes') },
+                              { path: 'maximum-demand', loadChildren: () => import('./modules/maximum-demand/maximum-demand.routes') },
+                              { path: 'system-load-factor', loadChildren: () => import('./modules/system-load-factor/system-load-factor.routes') },
+                        ]
+                  },
+            ]
+      },
 
       {
             path: "",
@@ -62,7 +63,7 @@ export const routes: Routes = [
                               { path: 'team', component: TeamComponent, title: 'Team' },
                               { path: 'about-us', component: AboutUsComponent, title: 'About Us' },
                               { path: 'buildwithus', component: BuildwithusComponent, title: 'Build with us' },
-                              { path: 'ceo-message', component: CeoMessageComponent, title: 'Managing Director Message' },
+                              { path: 'ceo-message', component: CeoMessageComponent, title: 'Policy And Law' },
                               { path: 'mission-vision', component: MissionVisionComponent, title: 'Mission, Vision And Core Values' },
                               { path: 'corporate-story', component: CorporateStoryComponent, title: 'Our Corporate Story' },
                               { path: 'contact-us', component: ContactUsComponent, title: 'Contact Us' },
@@ -73,6 +74,7 @@ export const routes: Routes = [
                               { path: 'service-details', component: ServiceDetailsComponent, title: 'Service Detail' },
                               { path: 'news', component: NewsComponent, title: 'News' },
                               { path: 'chart/petroleum', component: PetroleumChartComponent, title: 'Petroleum Chart' },
+                              { path: 'chart/electricity', component: ElectricityChartComponent, title: 'Electricity Chart' },
                               { path: 'chart/user-tariff', component: UserTariffsChartComponent, title: 'User Tariffs Chart' },
                               { path: 'chart/generation-mix', component: GenerationMixChartComponent, title: 'User Tariffs Chart' },
                               { path: 'chart/saidi', component: SaidiChartComponent, title: 'User Tariffs Chart' },

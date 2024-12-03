@@ -11,7 +11,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NonCollapsableService } from '../../../../../core/services/non-collapsable.service';
 
@@ -22,12 +22,12 @@ interface Year {
 }
 
 @Component({
-  selector: 'app-user-tariffs',
+  selector: 'chart-user-tariffs',
   standalone: true,
   imports: [CommonModule, NgxEchartsDirective,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
-    NgClass,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
@@ -46,6 +46,11 @@ export class UserTariffsChartComponent implements OnInit{
   selectedYear: string = "2024";
   selectedCountry: string;
 
+  country = new FormControl();
+  countryList: any[] = [];
+
+  selectedValues: number[] = [];
+
   chartOption: EChartsOption;
   xData:any;
   yData:any;
@@ -59,12 +64,28 @@ export class UserTariffsChartComponent implements OnInit{
   pageNumber: number = 1;
 
   searchCountry: string = '';
-  country: any[] = [];
 
   constructor(private nonCollapsableService: NonCollapsableService, private petroleumService: PetroleumService){}
 
   ngOnInit(): void {
+    this.getCountry()
     this.getUserTariff(this.selectedYear,"")
+  }
+
+  getCountry() {
+    this.nonCollapsableService.getCountry(1, 10,"").subscribe(
+      {
+        next: (response) => {
+          this.countryList = response.results
+        },
+        error: (error) => {
+          console.log(error.message)
+        },
+        complete: () => {
+          // this.isLoading = false
+        }
+      }
+    )
   }
 
   year: Year[] = [
@@ -78,38 +99,30 @@ export class UserTariffsChartComponent implements OnInit{
     this.getUserTariff(event.value, "")
   }
 
-  getCountry(event: Event) {
-    if(true){
-      this.pageNumber = 1
-      this.searchCountry = (event.target as HTMLInputElement).value
+  
+  onCountryClicked(event: any, country: any): void {
+    const index = this.selectedValues.indexOf(country.id);
+
+    if (index === -1) {
+      // Add value if not already selected
+      this.selectedValues.push(country.id);
+    } else {
+      // Remove value if already selected
+      this.selectedValues.splice(index, 1);
     }
-    this.nonCollapsableService.getCountry(this.pageNumber, this.pageSize,this.searchCountry).subscribe(
-      {
-        next: (response) => {
-          this.country = response.results
-          this.totalItems = response.count
-          this.pageNumber = response.page_number
-          this.pageSize = response.page_size
-        },
-        error: (error) => {
-          console.log(error.message)
-        },
-        complete: () => {
-          // this.isLoading = false
-        }
-      }
-    )
+
+    console.log('Selected Values:', this.selectedValues);
+
+
+    this.getUserTariff(this.selectedYear,this.selectedValues)
+
+
+    // Update FormControl value
+    this.country.setValue(this.selectedValues);
   }
   
-  onCountrySelected(event: MatAutocompleteSelectedEvent) {
-    const selectedCountry = event.option.value;
-    console.log('Selected product:', selectedCountry);
-    console.log('Selected product 2:', selectedCountry.name);
-    this.getUserTariff(this.selectedYear, selectedCountry.id)
-  }
-  
-  getUserTariff(year:string, product:any) {
-    this.nonCollapsableService.getUserTariffsSum(year,product).subscribe(
+  getUserTariff(year:string, country:any) {
+    this.nonCollapsableService.getUserTariffsSum(year,country).subscribe(
       {
         next: (response) => {
           this.isDataPresent = response
@@ -134,7 +147,7 @@ export class UserTariffsChartComponent implements OnInit{
         },
             xAxis: {
               type: 'value',
-              name: 'User Tariff',             // Label for x-axis
+              name: 'User Tariff (US¢/kWh)',             // Label for x-axis
               nameLocation: 'middle',    // Position the label in the middle
               nameTextStyle: {
               fontWeight: 'bold',

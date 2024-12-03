@@ -9,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class CeoMessageComponent {
 
+
+  openPdf(link: string) {
+    window.open(`assets/pdf/${link}`, '_blank');
+  }
+
 }

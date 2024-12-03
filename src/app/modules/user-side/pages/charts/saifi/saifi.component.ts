@@ -11,7 +11,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NonCollapsableService } from '../../../../../core/services/non-collapsable.service';
 
@@ -23,12 +23,14 @@ interface Year {
 
 
 @Component({
-  selector: 'app-saifi',
+  selector: 'chart-saifi',
   standalone: true,
-  imports: [CommonModule, NgxEchartsDirective,
+  imports: [
+    CommonModule, 
+    NgxEchartsDirective,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
-    NgClass,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
@@ -48,6 +50,11 @@ export class SaifiChartComponent implements OnInit{
   selectedYear: string = "2024";
   selectedCountry: string;
 
+  country = new FormControl();
+  countryList: any[] = [];
+
+  selectedValues: number[] = [];
+
   chartOption: EChartsOption;
   xData:any;
   yData:any;
@@ -61,11 +68,11 @@ export class SaifiChartComponent implements OnInit{
   pageNumber: number = 1;
 
   searchCountry: string = '';
-  country: any[] = [];
 
   constructor(private nonCollapsableService: NonCollapsableService, private petroleumService: PetroleumService){}
 
   ngOnInit(): void {
+    this.getCountry()
     this.getSaifi(this.selectedYear,"")
   }
 
@@ -77,21 +84,14 @@ export class SaifiChartComponent implements OnInit{
 
   onYearChange(event: MatSelectChange) {
     console.log('Year selected:', event.value)
-    this.getSaifi(event.value, "")
+    this.getSaifi(event.value, this.selectedValues)
   }
 
-  getCountry(event: Event) {
-    if(true){
-      this.pageNumber = 1
-      this.searchCountry = (event.target as HTMLInputElement).value
-    }
-    this.nonCollapsableService.getCountry(this.pageNumber, this.pageSize,this.searchCountry).subscribe(
+  getCountry() {
+    this.nonCollapsableService.getCountry(1, 10,"").subscribe(
       {
         next: (response) => {
-          this.country = response.results
-          this.totalItems = response.count
-          this.pageNumber = response.page_number
-          this.pageSize = response.page_size
+          this.countryList = response.results
         },
         error: (error) => {
           console.log(error.message)
@@ -103,15 +103,29 @@ export class SaifiChartComponent implements OnInit{
     )
   }
   
-  onCountrySelected(event: MatAutocompleteSelectedEvent) {
-    const selectedCountry = event.option.value;
-    console.log('Selected product:', selectedCountry);
-    console.log('Selected product 2:', selectedCountry.name);
-    this.getSaifi(this.selectedYear, selectedCountry.id)
+  onCountryClicked(event: any, country: any): void {
+    const index = this.selectedValues.indexOf(country.id);
+
+    if (index === -1) {
+      // Add value if not already selected
+      this.selectedValues.push(country.id);
+    } else {
+      // Remove value if already selected
+      this.selectedValues.splice(index, 1);
+    }
+
+    console.log('Selected Values:', this.selectedValues);
+
+
+    this.getSaifi(this.selectedYear,this.selectedValues)
+
+
+    // Update FormControl value
+    this.country.setValue(this.selectedValues);
   }
   
-  getSaifi(year:string, product:any) {
-    this.nonCollapsableService.getSaifiSum(year,product).subscribe(
+  getSaifi(year:string, country:any) {
+    this.nonCollapsableService.getSaifiSum(year,country).subscribe(
       {
         next: (response) => {
           this.isDataPresent = response
@@ -125,7 +139,7 @@ export class SaifiChartComponent implements OnInit{
         complete: () => {
           this.chartOption = {
             title: {
-              text: 'Basic Bar Chart with Labels',
+              text: 'SAIFI',
               left: 'center'
           },
           tooltip: {

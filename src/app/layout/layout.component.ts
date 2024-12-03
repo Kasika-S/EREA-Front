@@ -3,6 +3,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, Navigation, Router, RouterOutlet } from "@angular/router";
 import { Subject } from "rxjs";
 import { VerticalComponent } from "../../@erea/components/navigation/vertical/vertical.component";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: 'layout',
@@ -11,6 +12,7 @@ import { VerticalComponent } from "../../@erea/components/navigation/vertical/ve
   imports: [
     MatIconModule,
     RouterOutlet,
+    MatButtonModule,
     VerticalComponent,
   ],
   templateUrl: './layout.component.html',
@@ -98,4 +100,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
         //     navigation.toggle();
         // }
     }
+
+
+    goToHome() {
+        this._router.navigate(['/']); // Replace '/home' with the actual route for your homepage
+      }
 }

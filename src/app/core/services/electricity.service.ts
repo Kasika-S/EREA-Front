@@ -56,6 +56,14 @@ export class ElectricityService {
     return this.http.post<any>(`${this.apiUrl}/electricity-loss/`, data);
   }
 
+  getElectricitySum(country: any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/electricity-loss-sum/`, { params });
+  }
+
   getElectricityRegulatory(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -71,6 +79,14 @@ export class ElectricityService {
 
   addElectricityRegulatory(data: any) {
     return this.http.post<any>(`${this.apiUrl}/electricity-regulatory-index/`, data);
+  }
+
+  getElectricityRegulatorySum(country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/regulatory-index-sum/`, { params });
   }
 
   getElectricityGovernance(pageNumber: number, pageSize: number, searchQuery: string) {
@@ -90,6 +106,14 @@ export class ElectricityService {
     return this.http.post<any>(`${this.apiUrl}/electricity-governance-index/`, data);
   }
 
+  getElectricityGovernanceSum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/governance-index-sum/`, { params });
+  }
+
   getElectricitySubstance(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -107,6 +131,13 @@ export class ElectricityService {
     return this.http.post<any>(`${this.apiUrl}/electricity-substance-index/`, data);
   }
 
+  getElectricitySubstanceSum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/substance-index-sum/`, { params });
+  }
 
   getElectricityOutcome(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
@@ -125,6 +156,14 @@ export class ElectricityService {
     return this.http.post<any>(`${this.apiUrl}/electricity-outcome-index/`, data);
   }
 
+  getElectricityOutcomeSum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/outcome-index-sum/`, { params });
+  }
+
   getElectricityAccessRate(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -140,5 +179,13 @@ export class ElectricityService {
 
   addElectricityAccessRate(data: any) {
     return this.http.post<any>(`${this.apiUrl}/electricity-access-rate/`, data);
+  }
+
+  getElectricityAccessRateSum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/electricity-access-rate-sum/`, { params });
   }
 }

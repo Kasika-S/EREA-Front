@@ -11,7 +11,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NonCollapsableService } from '../../../../../core/services/non-collapsable.service';
 
@@ -21,12 +21,12 @@ interface Year {
   viewValue: string;
 }
 @Component({
-  selector: 'app-generation-mix',
+  selector: 'chart-generation-mix',
   standalone: true,
   imports: [CommonModule, NgxEchartsDirective,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
-    NgClass,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
@@ -45,7 +45,14 @@ export class GenerationMixChartComponent implements OnInit{
   selectedYear: string = "2024";
   selectedCountry: string;
 
+  country = new FormControl();
+  countryList: any[] = [];
+
+  selectedValues: number[] = [];
+
   chartOption: EChartsOption;
+  chartEnergyContribution: EChartsOption;
+
   xData:any;
   yData:any;
   dataPresent:any;
@@ -58,12 +65,14 @@ export class GenerationMixChartComponent implements OnInit{
   pageNumber: number = 1;
 
   searchCountry: string = '';
-  country: any[] = [];
 
   constructor(private nonCollapsableService: NonCollapsableService, private petroleumService: PetroleumService){}
 
   ngOnInit(): void {
+    this.getCountry()
     this.getGenerationMix(this.selectedYear,"")
+    this.getGenerationContrib(this.selectedYear,"")
+    
   }
 
   year: Year[] = [
@@ -77,18 +86,11 @@ export class GenerationMixChartComponent implements OnInit{
     this.getGenerationMix(event.value, "")
   }
 
-  getCountry(event: Event) {
-    if(true){
-      this.pageNumber = 1
-      this.searchCountry = (event.target as HTMLInputElement).value
-    }
-    this.nonCollapsableService.getCountry(this.pageNumber, this.pageSize,this.searchCountry).subscribe(
+  getCountry() {
+    this.nonCollapsableService.getCountry(1, 10,"").subscribe(
       {
         next: (response) => {
-          this.country = response.results
-          this.totalItems = response.count
-          this.pageNumber = response.page_number
-          this.pageSize = response.page_size
+          this.countryList = response.results
         },
         error: (error) => {
           console.log(error.message)
@@ -100,15 +102,31 @@ export class GenerationMixChartComponent implements OnInit{
     )
   }
   
-  onCountrySelected(event: MatAutocompleteSelectedEvent) {
-    const selectedCountry = event.option.value;
-    console.log('Selected product:', selectedCountry);
-    console.log('Selected product 2:', selectedCountry.name);
-    this.getGenerationMix(this.selectedYear, selectedCountry.id)
+
+  onCountryClicked(event: any, country: any): void {
+    const index = this.selectedValues.indexOf(country.id);
+
+    if (index === -1) {
+      // Add value if not already selected
+      this.selectedValues.push(country.id);
+    } else {
+      // Remove value if already selected
+      this.selectedValues.splice(index, 1);
+    }
+
+    console.log('Selected Values:', this.selectedValues);
+
+
+    this.getGenerationMix(this.selectedYear,this.selectedValues)
+    this.getGenerationContrib(this.selectedYear,this.selectedValues)
+
+
+    // Update FormControl value
+    this.country.setValue(this.selectedValues);
   }
   
-  getGenerationMix(year:string, product:any) {
-    this.nonCollapsableService.getGenerationMixSum(year,product).subscribe(
+  getGenerationMix(year:string, country:any) {
+    this.nonCollapsableService.getGenerationMixSum(year,country).subscribe(
       {
         next: (response) => {
           this.dataPresent = response.map((item: { electricity_source: any; total_contribution: any; }) => ({
@@ -142,7 +160,64 @@ export class GenerationMixChartComponent implements OnInit{
                 {
                     name: 'Generation Mix',
                     type: 'pie',
-                    radius: '50%', // Adjusts the size of the pie chart
+                    radius: '80%', // Adjusts the size of the pie chart
+                    data: this.dataPresent,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    label: {
+                        show: true,
+                        formatter: '{b}: {d}%', // Shows the name and percentage on each slice
+                        fontSize: 12,
+                        color: '#333'
+                    }
+                }
+            ]
+        };
+        }
+      }
+    )
+  }
+
+  getGenerationContrib(year:string, country:any) {
+    this.nonCollapsableService.getGenerationContribSum(year,country).subscribe(
+      {
+        next: (response) => {
+          this.dataPresent = response.map((item: { source: any; total_contribution: any; }) => ({
+            name: item.source,
+            value: item.total_contribution
+        }))
+
+          this.xData = response.map((item: { total_contribution: any; }) => item.total_contribution);
+          this.yData = response.map((item: { source: any; }) => item.source);
+        },
+        error: (error) => {
+          console.log(error.message)
+        },
+        complete: () => {
+          this.chartEnergyContribution = {
+            title: {
+                text: 'Energy Contribution',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c} ({d}%)' // Shows data in the format: Name : Value (Percentage)
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: this.yData
+            },
+            series: [
+                {
+                    name: 'Energy Contribution',
+                    type: 'pie',
+                    radius: '80%', // Adjusts the size of the pie chart
                     data: this.dataPresent,
                     emphasis: {
                         itemStyle: {
