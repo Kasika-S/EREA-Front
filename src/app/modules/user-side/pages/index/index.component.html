@@ -22,7 +22,7 @@
       </div>
 
 
-      <section class="relative pt-14 lg:pb-48 lg:pt-[100px]">
+      <section class="relative bg-white pt-14 lg:pb-48 lg:pt-[100px]">
         <div class="container relative z-[1]">
             <div class="text-center">
                 <div class="heading mb-5 text-center xl:w-[95%]">
@@ -60,10 +60,10 @@
 
 
     <section class="relative pt-14 lg:pb-48 lg:pt-[100px]">
-        <div class="container relative z-[1]">
+        <div class="container relative bg-white z-[1] shadow-md">
             <div class="text-center">
-                <div class="heading mb-5 text-center xl:w-[95%]">
-                    <h4>Consumption Per Capita</h4>
+                <div class="heading mb-5 bg-primary text-center xl:w-[95%]">
+                    <h4 class="p-5 !text-secondary">Consumption Per Capita</h4>
                 </div>
                 <div echarts [options]="mapOptions" id="mapChart" class="demo-chart"></div>
             </div>
@@ -72,10 +72,11 @@
 
     <section
     class="bg-gradient-to-b from-transparent to-white/[55%] py-10 dark:bg-gradient-to-t dark:from-white/5 dark:to-transparent lg:py-20">
-    <div class="container">
-          <div class="heading text-center">
-                <h4>Number of Connected Users</h4>
+    <div class="container bg-white shadow-md">
+          <div class="heading text-center bg-primary">
+                <h4 class="p-8 !text-secondary">Number of Connected Users</h4>
                     
+        </div>
 
             <!-- Year -->
             <div class="flex flex-row px-6 pb-2 gap-3 mt-5">
@@ -94,7 +95,6 @@
                 <div echarts [options]="chartOption" class="demo-chart"></div>
             </div>
                     
-          </div>
     </div>
 </section>
 

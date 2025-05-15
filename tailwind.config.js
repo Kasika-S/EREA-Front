@@ -19,9 +19,9 @@ module.exports = {
       colors: {
         primary: {
           ...colors.blue,
-          DEFAULT: colors.blue[900],
+          DEFAULT: '#264a7d',
         },
-        secondary: '#ecca00',
+        secondary: '#edb33d',
         white: '#ffffff',
         black: '#08111F',
         card: '#FFFFFF',

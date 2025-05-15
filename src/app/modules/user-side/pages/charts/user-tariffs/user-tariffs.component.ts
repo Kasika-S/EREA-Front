@@ -89,6 +89,7 @@ export class UserTariffsChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
     {value: '2022', viewValue: '2022'},
@@ -136,7 +137,7 @@ export class UserTariffsChartComponent implements OnInit{
         complete: () => {
           this.chartOption = {
             title: {
-              text: 'Basic Bar Chart with Labels',
+              text: 'User Tariff (US¢/kWh) vs Category',
               left: 'center'
           },
           tooltip: {

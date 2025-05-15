@@ -47,7 +47,7 @@ export class PetroleumChartComponent implements OnInit{
 
   selectedValues: number[] = [];
 
-  selectedYear: string = "2024";
+  selectedYear: string = "2025";
   selectedProduct: string;
 
   chartOption: EChartsOption;
@@ -66,6 +66,7 @@ export class PetroleumChartComponent implements OnInit{
   searchPetroleumProduct: string = '';
 
   year: Year[] = [
+    {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
     {value: '2022', viewValue: '2022'},
@@ -141,20 +142,21 @@ export class PetroleumChartComponent implements OnInit{
         },
         label: this.labelOption,
         itemStyle: {
-          color: product === 'Diesel' ? '#D2691E' : product === 'Petrol' ? '#38ACEC' : undefined, // Set color based on product
+          color: product === 'Diesel' ? '#264a7d' : product === 'Petrol' ? '#FFAB5B' : undefined, // Set color based on product
         },
         data: data.map((item: any) => {
           const productData = item.products.find((c: any) => c.product === product);
+          console.log("TESTING PETROL PRICE", productData);
           return productData ? productData.price : 0;
         }),
       };
     });
 
     this.chartOption = {
-      title: {
-        text: 'Price Progression of Petroleum products(US$/Ltr)',
-        left: 'center'
-      },
+      // title: {
+      //   text: 'Price Progression of Petroleum products(US$/Ltr)',
+      //   left: 'center'
+      // },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -213,10 +215,10 @@ export class PetroleumChartComponent implements OnInit{
         },
         complete: () => {
           this.chartOption2 = {
-            title: {
-              text: 'Volume of Import',
-              left: 'center'
-          },
+          //   title: {
+          //     text: 'Volume of Import',
+          //     left: 'center'
+          // },
           tooltip: {
             trigger: 'axis',
             axisPointer: {
@@ -226,7 +228,7 @@ export class PetroleumChartComponent implements OnInit{
             xAxis: {
               type: 'category',
               data: this.xData,
-              name: 'Petroleum',             // Label for x-axis
+              name: 'Petroleum Product',             // Label for x-axis
               nameLocation: 'middle',    // Position the label in the middle
               nameTextStyle: {
               fontWeight: 'bold',
@@ -240,7 +242,7 @@ export class PetroleumChartComponent implements OnInit{
               nameRotate: 90,            // Rotate the label for vertical alignment
               nameTextStyle: {
                   fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
+                  padding: 80             // Padding to adjust distance from the axis
               }
             },
             series: [
@@ -256,7 +258,7 @@ export class PetroleumChartComponent implements OnInit{
                   fontSize: 12
               },
               itemStyle: {
-                color: '#5470C6', // Customize bar color
+                color: '#264a7d', // Customize bar color
                 borderRadius: [4, 4, 0, 0] // Rounded top corners for bars
             }
               }

@@ -80,6 +80,7 @@ export class CrossBorderPowerChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
     {value: '2022', viewValue: '2022'},
@@ -107,7 +108,28 @@ export class CrossBorderPowerChartComponent implements OnInit{
     )
   }
   
-  onCountryClicked(event: any, country: any): void {
+  onCountryClicked1(event: any, country: any): void {
+    const index = this.selectedValues.indexOf(country.id);
+
+    if (index === -1) {
+      // Add value if not already selected
+      this.selectedValues.push(country.id);
+    } else {
+      // Remove value if already selected
+      this.selectedValues.splice(index, 1);
+    }
+
+    console.log('Selected Values:', this.selectedValues);
+
+
+    // this.getCrossBorderTariffs(this.selectedValues)
+
+
+    // Update FormControl value
+    // this.country.setValue(this.selectedValues);
+  }
+
+  onCountryClicked2(event: any, country: any): void {
     const index = this.selectedValues.indexOf(country.id);
 
     if (index === -1) {
@@ -125,7 +147,7 @@ export class CrossBorderPowerChartComponent implements OnInit{
 
 
     // Update FormControl value
-    this.country.setValue(this.selectedValues);
+    // this.country.setValue(this.selectedValues);
   }
   
   getCrossBorderTariffs(country:any) {
@@ -184,7 +206,7 @@ export class CrossBorderPowerChartComponent implements OnInit{
                   fontSize: 12
               },
               itemStyle: {
-                color: '#5470C6', // Customize bar color
+                color: '#264a7d', // Customize bar color
                 borderRadius: [4, 4, 0, 0] // Rounded top corners for bars
             }
               }

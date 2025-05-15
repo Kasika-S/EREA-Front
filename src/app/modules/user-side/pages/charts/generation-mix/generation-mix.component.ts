@@ -23,7 +23,9 @@ interface Year {
 @Component({
   selector: 'chart-generation-mix',
   standalone: true,
-  imports: [CommonModule, NgxEchartsDirective,
+  imports: [
+    CommonModule, 
+    NgxEchartsDirective,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
@@ -55,6 +57,10 @@ export class GenerationMixChartComponent implements OnInit{
 
   xData:any;
   yData:any;
+
+  xEnergyContribution:any;
+  yEnergyContribution:any;
+
   dataPresent:any;
 
   petroleumProduct: any[] = [];
@@ -76,6 +82,7 @@ export class GenerationMixChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
     {value: '2022', viewValue: '2022'},
@@ -192,50 +199,103 @@ export class GenerationMixChartComponent implements OnInit{
             value: item.total_contribution
         }))
 
-          this.xData = response.map((item: { total_contribution: any; }) => item.total_contribution);
-          this.yData = response.map((item: { source: any; }) => item.source);
+          this.yEnergyContribution = response.map((item: { total_contribution: any; }) => item.total_contribution);
+          this.xEnergyContribution = response.map((item: { source: any; }) => item.source);
+
+          console.log("testing energy", this.xEnergyContribution)
         },
         error: (error) => {
           console.log(error.message)
         },
         complete: () => {
-          this.chartEnergyContribution = {
-            title: {
-                text: 'Energy Contribution',
-                left: 'center'
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b} : {c} ({d}%)' // Shows data in the format: Name : Value (Percentage)
-            },
-            legend: {
-                orient: 'vertical',
-                left: 'left',
-                data: this.yData
-            },
-            series: [
-                {
-                    name: 'Energy Contribution',
-                    type: 'pie',
-                    radius: '80%', // Adjusts the size of the pie chart
-                    data: this.dataPresent,
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    },
-                    label: {
-                        show: true,
-                        formatter: '{b}: {d}%', // Shows the name and percentage on each slice
-                        fontSize: 12,
-                        color: '#333'
-                    }
-                }
-            ]
-        };
-        }
+        //   this.chartEnergyContribution = {
+        //     title: {
+        //         text: 'Energy Contribution',
+        //         left: 'center'
+        //     },
+        //     tooltip: {
+        //         trigger: 'item',
+        //         formatter: '{a} <br/>{b} : {c} ({d}%)' // Shows data in the format: Name : Value (Percentage)
+        //     },
+        //     legend: {
+        //         orient: 'vertical',
+        //         left: 'left',
+        //         data: this.yData
+        //     },
+        //     series: [
+        //         {
+        //             name: 'Energy Contribution',
+        //             type: 'pie',
+        //             radius: '80%', // Adjusts the size of the pie chart
+        //             data: this.dataPresent,
+        //             emphasis: {
+        //                 itemStyle: {
+        //                     shadowBlur: 10,
+        //                     shadowOffsetX: 0,
+        //                     shadowColor: 'rgba(0, 0, 0, 0.5)'
+        //                 }
+        //             },
+        //             label: {
+        //                 show: true,
+        //                 formatter: '{b}: {d}%', // Shows the name and percentage on each slice
+        //                 fontSize: 12,
+        //                 color: '#333'
+        //             }
+        //         }
+        //     ]
+        // };
+      
+        this.chartEnergyContribution = {
+          title: {
+            text: 'MW Contribution',
+            left: 'center'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow' // Use shadow for bar chart
+            }
+          },
+          xAxis: {
+            type: 'category',
+            data: this.xEnergyContribution,
+            name: 'Source',           
+            nameLocation: 'middle',    
+            nameTextStyle: {
+              fontWeight: 'bold',
+              padding: 20             
+            }
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Energy Contribution',    
+            nameLocation: 'middle',    
+            nameRotate: 90,            
+            nameTextStyle: {
+              fontWeight: 'bold',
+              padding: 30             
+            }
+          },
+          series: [
+            {
+              name: 'Energy Contribution',
+              data: this.yEnergyContribution,
+              type: 'bar', // Changed to bar
+              label: {
+                show: true,
+                position: 'top', 
+                color: '#000',   
+                fontWeight: 'bold',
+                fontSize: 12
+              },
+              itemStyle: {
+                color: '#264a7d' // Bar color
+              }
+            }
+          ]
+        };        
+        
+      }
       }
     )
   }

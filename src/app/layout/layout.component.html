@@ -40,13 +40,12 @@
         </button>
         <!-- Components -->
         <button
-                class=""
+                class="!bg-primary !text-white"
                 mat-flat-button
-                [color]="'primary'"
                 (click)="goToHome()"
               >
                 <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
-                <span class="ml-2 mr-1 text-white">Back to home</span>
+                <span class="ml-2 mr-1">Back to home</span>
         </button>
     </div>
 
@@ -63,7 +62,7 @@
     <div
         class="bg-card relative z-49 flex h-14 w-full flex-0 items-center justify-start border-t px-4 dark:bg-transparent md:px-6 print:hidden"
     >
-        <span class="text-secondary font-medium"
+        <span class="text-primary font-extrabold"
             >EREA &copy; {{ currentYear }}</span
         >
     </div>

@@ -65,7 +65,7 @@ export class IndexComponent implements AfterViewInit, OnInit{
 
 constructor(private renderer: Renderer2, private nonCollapsableService: NonCollapsableService){}
  
-selectedYear: string = "2024";
+selectedYear: string = "2025";
  
 chartOption: EChartsOption;
 xData:any;
@@ -84,6 +84,7 @@ dataPresent:any;
   }
 
   year: Year[] = [
+    {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
     {value: '2022', viewValue: '2022'},
@@ -151,7 +152,7 @@ dataPresent:any;
                   fontSize: 12
               },
               itemStyle: {
-                color: '#5470C6', // Customize bar color
+                color: '#264a7d', // Customize bar color
                 borderRadius: [4, 4, 0, 0] // Rounded top corners for bars
             }
               }
@@ -174,7 +175,7 @@ dataPresent:any;
             name: item.country,
             value: item.total_consumption_per_capita,
             itemStyle: {
-              areaColor: '#49C75C'
+              areaColor: '#2cdb46'
             }
             })
         )
@@ -189,11 +190,11 @@ dataPresent:any;
 
           this.mapOptions = {
       
-            // title: {
-            //   text: 'East Africa Connected Users',
-            //   subtext: 'Data from eac',
-            //   left: 'right',
-            // },
+            title: {
+              text: 'East Africa',
+              subtext: 'Number',
+              left: 'right',
+            },
             tooltip: {
               trigger: 'item',
               formatter: '{b}: {c}',

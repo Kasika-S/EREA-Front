@@ -10,7 +10,7 @@
 .upload-container {
   max-width: 400px;
   margin: 0; /* Remove margin to avoid offset */
-  padding: 10px;
+  padding: 6px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -20,7 +20,7 @@
     .upload-row {
       display: flex;  /* Use flexbox for alignment */
       align-items: center;  /* Center align items vertically */
-      margin-bottom: 10px; /* Add margin for spacing */
+      // margin-bottom: 10px; /* Add margin for spacing */
     }
     
     .custom-file-upload {
@@ -34,7 +34,7 @@
     }
     
     .custom-file-upload label {
-      background-color: #3f51b5; /* Material primary color */
+      background-color: #264a7d; /* Material primary color */
       color: white;
       padding: 10px 15px;
       border-radius: 4px;

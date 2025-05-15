@@ -14,14 +14,13 @@
       </div>
 
       <section
-            class="bg-gradient-to-b from-transparent to-white/[55%] py-10 dark:bg-gradient-to-t dark:from-white/5 dark:to-transparent lg:py-20">
+            class="bg-gradient-to-b from-transparent to-white/[55%] py-5 dark:bg-gradient-to-t dark:from-white/5 dark:to-transparent lg:py-10">
             <div class="container">
-                  <div class="heading text-center">
-                        <h6 class="!text-secondary">Petroleum</h6>
-                            
+                  <div class="heading text-center bg-white">
+                        <h6 class="!text-black !text-2xl">Filter</h6>
 
                     <!-- Year -->
-                    <div class="flex flex-row px-6 pb-2 gap-3 mt-5">
+                    <div class="flex flex-row px-6 pb-2  gap-3 mt-5">
 
                         <mat-form-field class="w-1/2">
                               <mat-label>Year</mat-label>
@@ -46,7 +45,7 @@
             </div>
       </section>
 
-      <section class="relative pt-14 lg:pb-48 bg-white lg:pt-[100px]">
+      <section class="">
 
             @if (this.isDataPresent.length == 0) {
                   <div class="flex items-center justify-center bg-gray-100 p-4">
@@ -62,12 +61,28 @@
                   </div>     
             } 
             @else {
-                  <div echarts [options]="chartOption" class="demo-chart"></div>
+                <section class="relative">
+                  <div class="container relative bg-white z-[1] shadow-md">
+                      <div class="text-center">
+                          <div class="heading mb-5 bg-primary text-center xl:w-[95%]">
+                              <h4 class="p-5 !text-secondary">Price Progression of Petroleum products(US$/Ltr)</h4>
+                          </div>
+                          <div echarts [options]="chartOption" class="demo-chart mx-18"></div>
+                        </div>
+                  </div>
+               </section>
             }
       </section>
 
-      <section class="relative pt-14 bg-white lg:pb-48 lg:pt-[100px]">
-            <div echarts [options]="chartOption2" class="demo-chart"></div>
+      <section class="relative lg:pb-48 lg:pt-[100px]">
+            <div class="container relative bg-white z-[1] shadow-md">
+                <div class="text-center">
+                    <div class="heading mb-5 bg-primary text-center xl:w-[95%]">
+                        <h4 class="p-5 !text-secondary">Volume of Import</h4>
+                    </div>
+                    <div echarts [options]="chartOption2" class="demo-chart"></div>
+                  </div>
+            </div>
       </section>
 
 </div>

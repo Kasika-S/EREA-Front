@@ -469,7 +469,7 @@ vertical-navigation-group-item {
           color: #fff;
 
             .fuse-vertical-navigation-item-icon {
-                @apply text-current opacity-60;
+                @apply text-secondary opacity-60;
             }
 
             .fuse-vertical-navigation-item-title-wrapper {
@@ -883,6 +883,11 @@ n .book-form input[type='date']::-webkit-calendar-picker-indicator {
     @apply h-[566px];
 }
 
+.mat-mdc-select-panel{
+    background-color: white !important;
+    z-index: 1 !important;
+}
+  
 @media screen and (max-width: 1200px) {
     .our-team .swiper-slide img {
         @apply h-[300px];

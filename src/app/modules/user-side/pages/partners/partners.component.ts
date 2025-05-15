@@ -68,7 +68,7 @@ export class PartnersComponent implements OnInit{
   },
   {
       id: 7,
-      logo: '/assets/images/partners/petroleum/eacop.png',
+      logo: '/assets/images/partners/petroleum/crude oil.png',
       country: 'Tanzania',
       organization:'EACOP',
       link:'https://www.eacop.com/',
@@ -83,7 +83,7 @@ export class PartnersComponent implements OnInit{
 },
 {
     id: 9,
-    logo: '/assets/images/partners/petroleum/nationaloil.jpg',
+    logo: '/assets/images/partners/petroleum/nationaloil.png',
     country: 'Kenya',
     organization:'National oil cooperation of Kenya',
     link:'https://nationaloil.co.ke/',
@@ -113,7 +113,7 @@ export class PartnersComponent implements OnInit{
 },
 {
   id: 13,
-  logo: '/assets/images/partners/petroleum/ranto.jpg',
+  logo: '/assets/images/partners/petroleum/ranto.png',
   country: 'Uganda',
   organization:'Oranto Petroleum',
   link:'https://atlasorantoenergy.com/',
@@ -128,7 +128,7 @@ export class PartnersComponent implements OnInit{
 // },
   {
     id: 15,
-    logo: '/assets/images/partners/petroleum/regrw.png',
+    logo: '/assets/images/partners/petroleum/rwanda energy group.png',
     country: 'Rwanda',
     organization:'Rwanda Energy Group',
     link:'https://www.reg.rw/about-us/history/',
@@ -195,14 +195,14 @@ export class PartnersComponent implements OnInit{
   
 {
   id: 8,
-  logo: '/assets/images/partners/min_energy/moep.jpg',
+  logo: '/assets/images/partners/min_energy/Ministry of energy and petroleum.png',
   country: 'Kenya',
   organization:'Ministry of Energy and Petroleum ',
   link:'https://energy.go.ke/',
 },
 {
   id: 11,
-  logo: '/assets/images/partners/min_energy/memd.png',
+  logo: '/assets/images/partners/min_energy/ministry of energy and mineral development.png',
   country: 'Uganda',
   organization:'MEMD',
   link:'https://memd.go.ug/',
@@ -230,7 +230,7 @@ export class PartnersComponent implements OnInit{
 },
 {
   id: 20,
-  logo: '/assets/images/partners/min_energy/south.png',
+  logo: '/assets/images/partners/min_energy/REPUBLIC OF SOUTH SUDAN.png',
   country: 'SOUTH SUDAN',
   organization:'Ministry of Petroleum and Mining',
   link:'https://mop.gov.ss/',
@@ -247,7 +247,7 @@ export class PartnersComponent implements OnInit{
 @Input() electricity: any[] = [
   {
       id: 1,
-      logo: '/assets/images/partners/electricity/tanesco.jpg',
+      logo: '/assets/images/partners/electricity/tanesco.png',
       country: 'Tanzania',
       organization:'TANESCO',
       link:'https://www.tanesco.co.tz/',
@@ -442,7 +442,7 @@ export class PartnersComponent implements OnInit{
   
 {
   id: 8,
-  logo: '/assets/images/partners/regulators/erea.png',
+  logo: '/assets/images/partners/regulators/EPRA.png',
   country: 'Kenya',
   organization:'EPRA',
   link:'https://energyregulators.org/',

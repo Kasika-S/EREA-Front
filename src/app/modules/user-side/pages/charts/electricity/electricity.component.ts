@@ -148,6 +148,7 @@ export class ElectricityChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
     {value: '2022', viewValue: '2022'},
@@ -206,7 +207,7 @@ export class ElectricityChartComponent implements OnInit{
               trigger: 'axis'
             },
             legend: {
-              data: ['Commercial Loss', 'Technical Loss'],
+              data: ['Electricity Loss'],
             },
             grid: {
               left: '3%',
@@ -221,15 +222,28 @@ export class ElectricityChartComponent implements OnInit{
             },
             xAxis: {
               type: 'category',
-              boundaryGap: false,
+              // boundaryGap: false,
               data: this.months,
+              name: 'Months',    // Label for y-axis
+              nameLocation: 'middle',  // Position the label in the middle
+              nameTextStyle: {
+                  fontWeight: 'bold',
+                  padding: 30             // Padding to adjust distance from the axis
+              }            
             },
             yAxis: {
-              type: 'value'
+              type: 'value',
+              name: 'Electricity Loss(%)',    // Label for y-axis
+              nameLocation: 'middle',    // Position the label in the middle
+              nameRotate: 90,            // Rotate the label for vertical alignment
+              nameTextStyle: {
+                  fontWeight: 'bold',
+                  padding: 30             // Padding to adjust distance from the axis
+              }
             },
             series: [
               {
-                name: 'Commercial Loss',
+                name: 'Electricity Loss',
                 type: 'line',
                 stack: 'Total',
                 endLabel: {
@@ -250,28 +264,28 @@ export class ElectricityChartComponent implements OnInit{
               },
               data: this.commercialLosses,
             },
-              {
-                name: 'Technical Loss',
-                type: 'line',
-                stack: 'Total',
-                endLabel: {
-                  show: true,
-                  formatter: '{a}', // Display the series name
-                  color: 'blue',
-                  fontSize: 14
-              },
-                label: {
-                  show: true,
-                  position: 'top', // Position the label above the line
-                  color: 'black',  // Label color
-                  fontSize: 12,      // Font size for the label
-              },
-              lineStyle: {
-                color: '#FFAA1D', // Custom color for Product C
-                width: 3,
-              },
-              data: this.technicalLosses,
-            },
+            //   {
+            //     name: 'Technical Loss',
+            //     type: 'line',
+            //     stack: 'Total',
+            //     endLabel: {
+            //       show: true,
+            //       formatter: '{a}', // Display the series name
+            //       color: 'blue',
+            //       fontSize: 14
+            //   },
+            //     label: {
+            //       show: true,
+            //       position: 'top', // Position the label above the line
+            //       color: 'black',  // Label color
+            //       fontSize: 12,      // Font size for the label
+            //   },
+            //   lineStyle: {
+            //     color: '#FFAA1D', // Custom color for Product C
+            //     width: 3,
+            //   },
+            //   data: this.technicalLosses,
+            // },
             ]
           };
 
