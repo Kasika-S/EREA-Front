@@ -43,7 +43,7 @@ interface Year {
 
 
 export class SystemLoadFactorChartComponent implements OnInit{
-  selectedYear: string = new Date().getFullYear().toString();
+  selectedYear: string = "2025";
   selectedCountry: string;
 
 
@@ -128,72 +128,146 @@ export class SystemLoadFactorChartComponent implements OnInit{
     this.country.setValue(this.selectedValues);
   }
   
-  getSystemLoadFactor(country:any) {
-    this.nonCollapsableService.getSystemLoadFactorSum(country).subscribe(
-      {
-        next: (response) => {
+  // getSystemLoadFactor(country:any) {
+  //   this.nonCollapsableService.getSystemLoadFactorSum(country).subscribe(
+  //     {
+  //       next: (response) => {
 
-        this.xSystemLoadFactor = response.map((item: { yearly: any; }) => item.yearly);
-        this.ySystemLoadFactor = response.map((item: { total_load_factor_percentage: any; }) => item.total_load_factor_percentage);
+  //       this.xSystemLoadFactor = response.map((item: { yearly: any; }) => item.yearly);
+  //       this.ySystemLoadFactor = response.map((item: { total_load_factor_percentage: any; }) => item.total_load_factor_percentage);
+  //       },
+  //       error: (error) => {
+  //         console.log(error.message)
+  //       },
+  //       complete: () => {
+
+  //         this.chartSystemLoadFactor = {
+  //           title: {
+  //             text: 'System Load Factor',
+  //             left: 'center'
+
+  //           },
+  //           tooltip: {
+  //             trigger: 'axis'
+  //           },
+  //           xAxis: {
+  //             type: 'category',
+  //             data: this.xSystemLoadFactor,
+  //             name: 'Years',             // Label for x-axis
+  //             nameLocation: 'middle',    // Position the label in the middle
+  //             nameTextStyle: {
+  //                 fontWeight: 'bold',
+  //                 padding: 30             // Padding to adjust distance from the axis
+  //             }
+  //           },
+  //           yAxis: {
+  //             type: 'value',
+  //             name: 'Load factor percentage',    // Label for y-axis
+  //             nameLocation: 'middle',    // Position the label in the middle
+  //             nameRotate: 90,            // Rotate the label for vertical alignment
+  //             nameTextStyle: {
+  //                 fontWeight: 'bold',
+  //                 padding: 30             // Padding to adjust distance from the axis
+  //             }
+  //           },
+  //           series: [
+  //             {
+  //               data: this.ySystemLoadFactor,
+  //               type: 'line',
+  //               lineStyle: {
+  //                 color: '#FFAA1D', // Set the line color
+  //                 width: 3,     // Set the line width
+  //               },
+  //               emphasis: {
+  //                 focus: 'series'
+  //               },
+  //               label: {
+  //                 show: true,
+  //                 position: 'top', // Position the label above the line
+  //                 color: 'black',  // Label color
+  //                 fontSize: 12      // Font size for the label
+  //             },
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     }
+  //   )
+  // }
+
+  seriesSystemLoadFactor:any;
+
+  getSystemLoadFactor(countyIds: any) {
+  this.nonCollapsableService.getSystemLoadFactorSum(countyIds).subscribe({
+    next: (response) => {
+      // Group data by county (if backend sends county info)
+      const grouped: any = {};
+
+      response.forEach((item: any) => {
+        const county = item.country_name || "All Counties";
+        if (!grouped[county]) grouped[county] = [];
+
+        grouped[county].push({
+          year: item.yearly,
+          value: item.total_load_factor_percentage
+        });
+      });
+
+      // Extract x-axis years from the first group
+      const firstCounty = Object.keys(grouped)[0];
+      this.xSystemLoadFactor = grouped[firstCounty].map((d: any) => d.year);
+
+      // Generate all line series
+      this.seriesSystemLoadFactor = Object.keys(grouped).map((county, index) => ({
+        name: county,
+        type: 'line',
+        data: grouped[county].map((d: any) => d.value),
+        smooth: true,
+        lineStyle: {
+          width: 3
         },
-        error: (error) => {
-          console.log(error.message)
-        },
-        complete: () => {
-
-          this.chartSystemLoadFactor = {
-            title: {
-              text: 'System Load Factor',
-              left: 'center'
-
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            xAxis: {
-              type: 'category',
-              data: this.xSystemLoadFactor,
-              name: 'Years',             // Label for x-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            yAxis: {
-              type: 'value',
-              name: 'Load factor percentage',    // Label for y-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameRotate: 90,            // Rotate the label for vertical alignment
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            series: [
-              {
-                data: this.ySystemLoadFactor,
-                type: 'line',
-                lineStyle: {
-                  color: '#FFAA1D', // Set the line color
-                  width: 3,     // Set the line width
-                },
-                emphasis: {
-                  focus: 'series'
-                },
-                label: {
-                  show: true,
-                  position: 'top', // Position the label above the line
-                  color: 'black',  // Label color
-                  fontSize: 12      // Font size for the label
-              },
-              }
-            ]
-          }
+        label: {
+          show: true,
+          position: 'top',
+          fontSize: 12
         }
-      }
-    )
-  }
+      }));
+    },
+
+    error: (error) => console.log(error.message),
+
+    complete: () => {
+      this.chartSystemLoadFactor = {
+        title: {
+          text: 'System Load Factor',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          top: '8%'
+        },
+        xAxis: {
+          type: 'category',
+          data: this.xSystemLoadFactor,
+          name: 'Years',
+          nameLocation: 'middle',
+          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Load Factor (%)',
+          nameLocation: 'middle',
+          nameRotate: 90,
+          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+        },
+        series: this.seriesSystemLoadFactor
+      };
+    }
+  });
+}
+
 
   displayFn(value: any): string {
     return value && value.name ? value.name : '';

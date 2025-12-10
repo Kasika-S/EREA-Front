@@ -60,7 +60,7 @@ interface Year {
 
 
 export class ElectricityChartComponent implements OnInit{
-  selectedYear: string = new Date().getFullYear().toString();
+  selectedYear: string = "2025";
   selectedCountry: string;
 
   country = new FormControl();
@@ -699,75 +699,97 @@ export class ElectricityChartComponent implements OnInit{
     )
   }
 
+  legendData:any;
+  seriesData:any;
 
+ getElectricityAccessRate(country: any) {
+  this.electricityService.getElectricityAccessRateSum(country).subscribe({
+    next: (response) => {
+      // response format:
+      // [
+      //   { country: 'Tanzania', values: [{year:2020, value:150}, ...] },
+      //   { country: 'Kenya', values: [...] },
+      // ]
 
+      // 1️⃣ Collect all years
+      const allYears = new Set<number>();
+      response.forEach((c: any) => {
+        c.values.forEach((v: any) => allYears.add(v.year));
+      });
 
-  getElectricityAccessRate(country:any) {
-    this.electricityService.getElectricityAccessRateSum(country).subscribe(
-      {
-        next: (response) => {
+      this.xAccessRate = Array.from(allYears).sort(); // sorted years
 
-        this.xAccessRate = response.map((item: { yearly: any; }) => item.yearly);
-        this.yAccessRate = response.map((item: { total_access_rate_percentage: any; }) => item.total_access_rate_percentage);
+      // 2️⃣ Build series for each country
+      this.seriesData = response.map((c: any) => ({
+        name: c.country,
+        type: 'line',
+        data: this.xAccessRate.map((year:any) => {
+          const found = c.values.find((v: any) => v.year === year);
+          return found ? found.value : 0; // return 0 if no value for this year
+        }),
+        lineStyle: {
+          width: 3
         },
-        error: (error) => {
-          console.log(error.message)
+        emphasis: {
+          focus: 'series'
         },
-        complete: () => {
-
-          this.chartElectricityAccessRate = {
-            title: {
-              text: 'Electricity Access Rate',
-              left: 'center'
-
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            xAxis: {
-              type: 'category',
-              data: this.xAccessRate,
-              name: 'Years',             // Label for x-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            yAxis: {
-              type: 'value',
-              name: 'Access Rate Percentage',    // Label for y-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameRotate: 90,            // Rotate the label for vertical alignment
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            series: [
-              {
-                data: this.yAccessRate,
-                type: 'line',
-                lineStyle: {
-                  color: '#FFAA1D', // Set the line color
-                  width: 3,     // Set the line width
-                },
-                emphasis: {
-                  focus: 'series'
-                },
-                label: {
-                  show: true,
-                  position: 'top', // Position the label above the line
-                  color: 'black',  // Label color
-                  fontSize: 12      // Font size for the label
-              },
-              }
-            ]
-          }
+        label: {
+          show: true,
+          position: 'top',
+          color: 'black',
+          fontSize: 12
         }
-      }
-    )
-  }
+      }));
+
+      // 3️⃣ Legend list (country names)
+      this.legendData = response.map((c: any) => c.country);
+    },
+
+    error: (error) => {
+      console.log(error.message);
+    },
+
+    complete: () => {
+      // 4️⃣ Build the final chart
+      this.chartElectricityAccessRate = {
+        title: {
+          text: 'Electricity Access Rate',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: this.legendData,
+          left: 'center',
+          top: 30
+        },
+        xAxis: {
+          type: 'category',
+          data: this.xAccessRate,
+          name: 'Years',
+          nameLocation: 'middle',
+          nameTextStyle: {
+            fontWeight: 'bold',
+            padding: 30
+          }
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Access Rate Percentage',
+          nameLocation: 'middle',
+          nameRotate: 90,
+          nameTextStyle: {
+            fontWeight: 'bold',
+            padding: 30
+          }
+        },
+        series: this.seriesData
+      };
+    }
+  });
+}
+
 
   getCrossBorderTariffs(country:any) {
     this.nonCollapsableService.getCrossBorderTariffSum(country).subscribe(

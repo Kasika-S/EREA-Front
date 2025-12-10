@@ -43,7 +43,7 @@ interface Year {
 })
 
 export class SaidiChartComponent implements OnInit{
-  selectedYear: string = new Date().getFullYear().toString();
+  selectedYear: string = "2025";
   selectedCountry: string;
 
 

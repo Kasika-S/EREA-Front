@@ -44,7 +44,7 @@ interface Year {
 
 
 export class CrossBorderPowerChartComponent implements OnInit{
-  selectedYear: string = new Date().getFullYear().toString();
+  selectedYear: string = "2025";
   selectedCountry: string;
 
 

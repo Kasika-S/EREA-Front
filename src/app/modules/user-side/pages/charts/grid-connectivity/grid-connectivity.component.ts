@@ -44,7 +44,7 @@ interface Year {
 })
 
 export class GridConnectivityChartComponent implements OnInit{
-  selectedYear: string = new Date().getFullYear().toString();
+  selectedYear: string = "2025";
   selectedCountry: string;
 
 
@@ -129,72 +129,138 @@ export class GridConnectivityChartComponent implements OnInit{
     this.country.setValue(this.selectedValues);
   }
   
-  getGridConnectivity(country:any) {
-    this.nonCollapsableService.getGridConnectivitySum(country).subscribe(
-      {
-        next: (response) => {
+  // getGridConnectivity(country:any) {
+  //   this.nonCollapsableService.getGridConnectivitySum(country).subscribe(
+  //     {
+  //       next: (response) => {
 
-        this.xGridConnectivity = response.map((item: { yearly: any; }) => item.yearly);
-        this.yGridConnectivity = response.map((item: { total_connectivity_percentage: any; }) => item.total_connectivity_percentage);
-        },
-        error: (error) => {
-          console.log(error.message)
-        },
-        complete: () => {
+  //       this.xGridConnectivity = response.map((item: { yearly: any; }) => item.yearly);
+  //       this.yGridConnectivity = response.map((item: { total_connectivity_percentage: any; }) => item.total_connectivity_percentage);
+  //       },
+  //       error: (error) => {
+  //         console.log(error.message)
+  //       },
+  //       complete: () => {
 
-          this.chartGridConnectivity = {
-            title: {
-              text: 'Grid Connectivity',
-              left: 'center'
+  //         this.chartGridConnectivity = {
+  //           title: {
+  //             text: 'Grid Connectivity',
+  //             left: 'center'
 
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            xAxis: {
-              type: 'category',
-              data: this.xGridConnectivity,
-              name: 'Years',             // Label for x-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            yAxis: {
-              type: 'value',
-              name: 'Grid Connectivity',    // Label for y-axis
-              nameLocation: 'middle',    // Position the label in the middle
-              nameRotate: 90,            // Rotate the label for vertical alignment
-              nameTextStyle: {
-                  fontWeight: 'bold',
-                  padding: 30             // Padding to adjust distance from the axis
-              }
-            },
-            series: [
-              {
-                data: this.yGridConnectivity,
-                type: 'line',
-                lineStyle: {
-                  color: '#FFAA1D', // Set the line color
-                  width: 3,     // Set the line width
-                },
-                emphasis: {
-                  focus: 'series'
-                },
-                label: {
-                  show: true,
-                  position: 'top', // Position the label above the line
-                  color: 'black',  // Label color
-                  fontSize: 12      // Font size for the label
-              },
-              }
-            ]
-          }
+  //           },
+  //           tooltip: {
+  //             trigger: 'axis'
+  //           },
+  //           xAxis: {
+  //             type: 'category',
+  //             data: this.xGridConnectivity,
+  //             name: 'Years',             // Label for x-axis
+  //             nameLocation: 'middle',    // Position the label in the middle
+  //             nameTextStyle: {
+  //                 fontWeight: 'bold',
+  //                 padding: 30             // Padding to adjust distance from the axis
+  //             }
+  //           },
+  //           yAxis: {
+  //             type: 'value',
+  //             name: 'Grid Connectivity',    // Label for y-axis
+  //             nameLocation: 'middle',    // Position the label in the middle
+  //             nameRotate: 90,            // Rotate the label for vertical alignment
+  //             nameTextStyle: {
+  //                 fontWeight: 'bold',
+  //                 padding: 30             // Padding to adjust distance from the axis
+  //             }
+  //           },
+  //           series: [
+  //             {
+  //               data: this.yGridConnectivity,
+  //               type: 'line',
+  //               lineStyle: {
+  //                 color: '#FFAA1D', // Set the line color
+  //                 width: 3,     // Set the line width
+  //               },
+  //               emphasis: {
+  //                 focus: 'series'
+  //               },
+  //               label: {
+  //                 show: true,
+  //                 position: 'top', // Position the label above the line
+  //                 color: 'black',  // Label color
+  //                 fontSize: 12      // Font size for the label
+  //             },
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     }
+  //   )
+  // }
+
+  getGridConnectivity(country: any) {
+  this.nonCollapsableService.getGridConnectivitySum(country).subscribe({
+    next: (response) => {
+      console.log("Grid Connectivity API:", response);
+
+      const legendData: string[] = [];
+      const seriesData: any[] = [];
+      let xAxisYears: number[] = [];
+
+      response.forEach((item: any) => {
+        legendData.push(item.country);
+
+        const sortedValues = item.values.sort((a: any, b: any) => a.year - b.year);
+
+        if (xAxisYears.length === 0) {
+          xAxisYears = sortedValues.map((v: any) => v.year);
         }
-      }
-    )
-  }
+
+        seriesData.push({
+          name: item.country,
+          type: 'line',
+          data: sortedValues.map((v: any) => v.value),
+          lineStyle: { width: 3 },
+          label: {
+            show: true,
+            position: 'top'
+          }
+        });
+      });
+
+      this.chartGridConnectivity = {
+        title: {
+          text: 'Grid Connectivity',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: legendData,
+          top: 30
+        },
+        xAxis: {
+          type: 'category',
+          data: xAxisYears,
+          name: 'Years',
+          nameLocation: 'middle',
+          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Connectivity Percentage',
+          nameLocation: 'middle',
+          nameRotate: 90,
+          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+        },
+        series: seriesData
+      };
+    },
+    error: (error) => {
+      console.log(error.message);
+    }
+  });
+}
+
 
   displayFn(value: any): string {
     return value && value.name ? value.name : '';
