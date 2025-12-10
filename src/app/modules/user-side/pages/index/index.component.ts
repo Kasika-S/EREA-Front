@@ -65,7 +65,7 @@ export class IndexComponent implements AfterViewInit, OnInit{
 
 constructor(private renderer: Renderer2, private nonCollapsableService: NonCollapsableService){}
  
-selectedYear: string = "2025";
+selectedYear: string = new Date().getFullYear().toString();
  
 chartOption: EChartsOption;
 xData:any;

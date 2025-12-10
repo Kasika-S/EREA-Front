@@ -81,7 +81,8 @@
       </section>
 
       <section class="relative lg:pb-38 lg:pt-[100px]">
-            <div class="container relative bg-white z-[1] shadow-md">
+            @if(this.dataPresent.length != 0){
+                  <div class="container relative bg-white z-[1] shadow-md">
                   <div class="text-center">
                         <div class="heading mb-5 bg-primary text-center xl:w-[95%]">
                               <h4 class="p-5 !text-secondary">MW Contribution</h4>
@@ -89,6 +90,24 @@
                         <div echarts [options]="chartEnergyContribution" class="demo-chart"></div>
                   </div>
             </div>
+            }
+            @else {
+            <div class="flex items-center justify-center bg-gray-100 p-4">
+                  <div
+                        class="bg-white p-8 rounded-lg shadow-lg flex items-center space-x-4 max-w-md w-full text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-400" fill="none"
+                              stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6v6m0 0l-4-4m4 4l4-4M12 12l4 4m-4-4l-4 4M4 12v6h16V6H4v6z"></path>
+                        </svg>
+                        <div>
+                              <h2 class="text-xl font-semibold text-gray-700">No Data Available</h2>
+                              <p class="text-gray-500 mt-2">We couldn't find any data to display. Please try again and
+                                    adjust your filters.</p>
+                        </div>
+                  </div>
+            </div>
+            }
       </section>
 
 </div>

@@ -43,7 +43,7 @@ interface Year {
 
 
 export class SystemLoadFactorChartComponent implements OnInit{
-  selectedYear: string = "2024";
+  selectedYear: string = new Date().getFullYear().toString();
   selectedCountry: string;
 
 

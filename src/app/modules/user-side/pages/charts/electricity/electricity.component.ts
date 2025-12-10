@@ -60,7 +60,7 @@ interface Year {
 
 
 export class ElectricityChartComponent implements OnInit{
-  selectedYear: string = "2024";
+  selectedYear: string = new Date().getFullYear().toString();
   selectedCountry: string;
 
   country = new FormControl();

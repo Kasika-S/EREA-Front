@@ -47,7 +47,7 @@ export class PetroleumChartComponent implements OnInit{
 
   selectedValues: number[] = [];
 
-  selectedYear: string = "2025";
+  selectedYear: string = new Date().getFullYear().toString();
   selectedProduct: string;
 
   chartOption: EChartsOption;

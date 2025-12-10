@@ -44,7 +44,7 @@ interface Year {
 })
 
 export class GenerationMixChartComponent implements OnInit{
-  selectedYear: string = "2024";
+  selectedYear: string = new Date().getFullYear().toString();
   selectedCountry: string;
 
   country = new FormControl();
@@ -91,6 +91,7 @@ export class GenerationMixChartComponent implements OnInit{
   onYearChange(event: MatSelectChange) {
     console.log('Year selected:', event.value)
     this.getGenerationMix(event.value, "")
+    this.getGenerationContrib(event.value, "")
   }
 
   getCountry() {

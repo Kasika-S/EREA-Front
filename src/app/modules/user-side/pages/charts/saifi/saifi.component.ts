@@ -47,7 +47,7 @@ interface Year {
 
 
 export class SaifiChartComponent implements OnInit{
-  selectedYear: string = "2024";
+  selectedYear: string = new Date().getFullYear().toString();
   selectedCountry: string;
 
   country = new FormControl();
