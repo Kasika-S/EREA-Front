@@ -1,0 +1,17 @@
+:host { background:#f8f9fa; display:block; font-family:'Public Sans',sans-serif; padding-bottom:90px; }
+:host ::ng-deep > .overflow-x-hidden > .overflow-hidden { background:linear-gradient(120deg,#001e40,#003366) !important; margin:0 !important; padding:0 !important; }
+:host ::ng-deep > .overflow-x-hidden > .overflow-hidden .container { background:none !important; max-width:1248px; padding:0 48px; }
+:host ::ng-deep > .overflow-x-hidden > .overflow-hidden h2 { color:#fff !important; font-family:'Public Sans',sans-serif; font-size:clamp(2.5rem,5vw,4rem) !important; letter-spacing:-.05em; line-height:1.05 !important; padding:65px 0 !important; }
+:host ::ng-deep > .overflow-x-hidden > section:nth-child(2) { padding:35px 0 12px !important; }
+:host ::ng-deep > .overflow-x-hidden > section:nth-child(2) h4 { color:#003366; font-family:'Public Sans',sans-serif; font-size:1.7rem; letter-spacing:-.03em; }
+:host ::ng-deep .mat-mdc-tab-header { background:#fff; border:1px solid #e1e3e4; border-radius:10px; margin:22px auto 32px; max-width:1248px; padding:0 12px; }
+:host ::ng-deep .mat-mdc-tab { font-family:'Public Sans',sans-serif; min-width:auto; padding:0 18px; }
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label { color:#006d3d; font-weight:700; }
+:host ::ng-deep .mdc-tab-indicator__content--underline { border-color:#006d3d; }
+:host ::ng-deep mat-tab-body > .mat-mdc-tab-body-content { overflow:hidden; }
+:host ::ng-deep .container { max-width:1248px; }
+:host ::ng-deep .demo-chart { height:460px; }
+:host ::ng-deep section.relative .container { border-radius:12px; box-shadow:0 2px 12px rgba(25,28,29,.07); overflow:hidden; }
+:host ::ng-deep section.relative .heading.bg-primary { background:#003366; margin:0; width:100%; }
+:host ::ng-deep section.relative .heading.bg-primary h4 { color:#fff !important; font-family:'Public Sans',sans-serif; font-size:1.25rem; letter-spacing:-.02em; }
+@media(max-width:600px) { :host ::ng-deep > .overflow-x-hidden > .overflow-hidden .container { padding:0 20px; } :host ::ng-deep .mat-mdc-tab-header { border-radius:0; margin:20px 0; overflow:auto; } :host ::ng-deep .demo-chart { height:350px; } }

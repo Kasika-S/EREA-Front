@@ -179,17 +179,25 @@ export class ElectricityChartComponent implements OnInit{
     this.electricityService.getElectricitySum(country).subscribe(
       {
         next: (data) => {
-          
+          const response = Array.isArray(data) ? data : [];
+          const technicalLoss = response.find((item: any) => item.type_of_loss === 'technical');
+          const commercialLoss = response.find((item: any) => item.type_of_loss === 'commercial');
+          const allSeries = [technicalLoss, commercialLoss].filter(Boolean);
+
           this.months = Array.from(
-            new Set(data.flatMap((item: any) => item.data.map((d: any) => d.month)))
+            new Set(
+              allSeries.flatMap((item: any) =>
+                Array.isArray(item.data) ? item.data.map((d: any) => d.month) : []
+              )
+            )
           );
-    
+
           this.commercialLosses = this.months.map((month: any) =>
-            data[0].data.find((d: any) => d.month === month)?.loss_percentage || 0
+            commercialLoss?.data?.find((d: any) => d.month === month)?.loss_percentage || 0
           );
-    
+
           this.technicalLosses = this.months.map((month: any) =>
-            data[1].data
+            (technicalLoss?.data || [])
               .filter((d: any) => d.month === month)
               .reduce((sum: number, d: any) => sum + d.loss_percentage, 0)
           );
@@ -207,7 +215,7 @@ export class ElectricityChartComponent implements OnInit{
               trigger: 'axis'
             },
             legend: {
-              data: ['Electricity Loss'],
+              data: ['Commercial Loss', 'Technical Loss'],
             },
             grid: {
               left: '3%',
@@ -243,7 +251,7 @@ export class ElectricityChartComponent implements OnInit{
             },
             series: [
               {
-                name: 'Electricity Loss',
+                name: 'Commercial Loss',
                 type: 'line',
                 stack: 'Total',
                 endLabel: {
@@ -264,28 +272,28 @@ export class ElectricityChartComponent implements OnInit{
               },
               data: this.commercialLosses,
             },
-            //   {
-            //     name: 'Technical Loss',
-            //     type: 'line',
-            //     stack: 'Total',
-            //     endLabel: {
-            //       show: true,
-            //       formatter: '{a}', // Display the series name
-            //       color: 'blue',
-            //       fontSize: 14
-            //   },
-            //     label: {
-            //       show: true,
-            //       position: 'top', // Position the label above the line
-            //       color: 'black',  // Label color
-            //       fontSize: 12,      // Font size for the label
-            //   },
-            //   lineStyle: {
-            //     color: '#FFAA1D', // Custom color for Product C
-            //     width: 3,
-            //   },
-            //   data: this.technicalLosses,
-            // },
+              {
+                name: 'Technical Loss',
+                type: 'line',
+                stack: 'Total',
+                endLabel: {
+                  show: true,
+                  formatter: '{a}',
+                  color: 'blue',
+                  fontSize: 14
+              },
+                label: {
+                  show: true,
+                  position: 'top',
+                  color: 'black',
+                  fontSize: 12,
+              },
+              lineStyle: {
+                color: '#FFAA1D',
+                width: 3,
+              },
+              data: this.technicalLosses,
+            },
             ]
           };
 

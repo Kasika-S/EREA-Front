@@ -43,7 +43,7 @@ interface Year {
 
 
 export class SystemLoadFactorChartComponent implements OnInit{
-  selectedYear: string = "2025";
+  selectedYear: string = "2026";
   selectedCountry: string;
 
 
@@ -57,7 +57,7 @@ export class SystemLoadFactorChartComponent implements OnInit{
 
   xData:any;
   yData:any;
-  isDataPresent:any;
+  isDataPresent: any[] = [];
 
   xSystemLoadFactor:any;
   ySystemLoadFactor:any;
@@ -79,6 +79,7 @@ export class SystemLoadFactorChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2026', viewValue: '2026'},
     {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
@@ -200,10 +201,12 @@ export class SystemLoadFactorChartComponent implements OnInit{
   getSystemLoadFactor(countyIds: any) {
   this.nonCollapsableService.getSystemLoadFactorSum(countyIds).subscribe({
     next: (response) => {
+      const data = Array.isArray(response) ? response : [];
+
       // Group data by county (if backend sends county info)
       const grouped: any = {};
 
-      response.forEach((item: any) => {
+      data.forEach((item: any) => {
         const county = item.country_name || "All Counties";
         if (!grouped[county]) grouped[county] = [];
 
@@ -215,7 +218,7 @@ export class SystemLoadFactorChartComponent implements OnInit{
 
       // Extract x-axis years from the first group
       const firstCounty = Object.keys(grouped)[0];
-      this.xSystemLoadFactor = grouped[firstCounty].map((d: any) => d.year);
+      this.xSystemLoadFactor = firstCounty ? grouped[firstCounty].map((d: any) => d.year) : [];
 
       // Generate all line series
       this.seriesSystemLoadFactor = Object.keys(grouped).map((county, index) => ({

@@ -47,7 +47,7 @@ interface Year {
 
 
 export class SaifiChartComponent implements OnInit{
-  selectedYear: string = "2025";
+  selectedYear: string = "2026";
   selectedCountry: string;
 
   country = new FormControl();
@@ -58,7 +58,7 @@ export class SaifiChartComponent implements OnInit{
   chartOption: EChartsOption;
   xData:any;
   yData:any;
-  isDataPresent:any;
+  isDataPresent: any[] = [];
 
   petroleumProduct: any[] = [];
 
@@ -77,6 +77,7 @@ export class SaifiChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2026', viewValue: '2026'},
     {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},

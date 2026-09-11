@@ -1,6 +1,9 @@
 // @use 'angular-material.scss';
 
 
+/* Public Sans provides the deliberate institutional type scale used by the public DataHub. */
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
 
 @tailwind base;
@@ -9,6 +12,26 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Shared presentation for the repeated authenticated data-management pages. */
+layout .absolute.inset-0.flex.min-w-0 { background:#f8f9fa; }
+layout .absolute.inset-0 .flex-auto { padding:28px 32px 56px; }
+layout .absolute.inset-0 .flex-auto > .flex.flex-auto { background:#fff; border:0; border-radius:12px; box-shadow:0 2px 12px rgba(25,28,29,.07); margin-bottom:24px; padding:26px; }
+layout .absolute.inset-0 .flex-auto > .flex.flex-auto .bg-primary { background:#003366; border-radius:8px; padding:21px; }
+layout .absolute.inset-0 .flex-auto > .flex.flex-auto .text-secondary { color:#9af6b8; }
+layout .absolute.inset-0 .flex-auto > .flex.flex-auto mat-form-field { background:#f3f4f5; border-radius:8px; }
+layout .absolute.inset-0 .flex-auto > .flex.flex-auto button[mat-flat-button] { background:#006d3d !important; border-radius:7px; color:#fff !important; padding:20px 25px !important; }
+layout .parent-container { display:flex; justify-content:flex-end; margin:0 0 22px; padding:0 !important; }
+layout .upload-container { background:#fff; border:1px solid #e1e3e4; border-radius:10px; box-shadow:0 2px 9px rgba(25,28,29,.05); max-width:430px; padding:12px; }
+layout .custom-file-upload label { background:#003366 !important; border-radius:6px !important; color:#fff; font-size:.76rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+layout .z-20.flex.cursor-pointer { background:transparent; border:0; padding:0; }
+layout table.mat-mdc-table { background:#fff; box-shadow:0 2px 12px rgba(25,28,29,.07); width:100%; }
+layout .mat-mdc-header-row { background:#e7e8e9; }
+layout .mat-mdc-header-cell { color:#43474f; font-family:'Public Sans',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; }
+layout .mat-mdc-cell, layout .mat-mdc-header-cell { border-bottom-color:#e1e3e4 !important; padding:16px 18px; }
+layout .mat-mdc-row:hover { background:#f3f4f5; }
+layout mat-paginator { background:#fff; border-top:1px solid #e1e3e4; }
+@media (max-width:767px) { layout .absolute.inset-0 .flex-auto { padding:18px 16px 40px; } layout .absolute.inset-0 .flex-auto > .flex.flex-auto { padding:18px; } layout .parent-container { justify-content:stretch; } layout .upload-container { max-width:none; width:100%; } }
 
 
 /* Variables */
@@ -483,6 +506,42 @@ vertical-navigation-group-item {
             }
         }
     }
+}
+
+/* Admin navigation is intentionally scoped so public navigation remains unchanged. */
+vertical-navigation.admin-sidebar {
+    --fuse-vertical-navigation-width: 300px;
+    background: #f8fbf8;
+    border-right: 1px solid #d9e5dc;
+    color: #15291e;
+
+    .fuse-vertical-navigation-content { padding: 0 12px 24px; }
+    .fuse-vertical-navigation-content-header { padding: 4px 12px 20px; }
+    .admin-sidebar-brand { display: grid; gap: 3px; }
+    .admin-sidebar-brand span { color: #0b3d27; font-family: Georgia, 'Times New Roman', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -.04em; }
+    .admin-sidebar-brand small { color: #597061; font-size: .72rem; font-weight: 700; letter-spacing: .04em; }
+
+    vertical-navigation-group-item > .fuse-vertical-navigation-item-wrapper .fuse-vertical-navigation-item {
+        color: #638070;
+        cursor: default;
+        min-height: 2.4rem;
+        padding: 18px 10px 6px;
+    }
+    vertical-navigation-group-item > .fuse-vertical-navigation-item-wrapper .fuse-vertical-navigation-item .fuse-vertical-navigation-item-title { color: #638070; font-size: .68rem; font-weight: 800; letter-spacing: .12em; opacity: 1; }
+    vertical-navigation-basic-item .fuse-vertical-navigation-item,
+    vertical-navigation-collapsable-item .fuse-vertical-navigation-item { border-radius: 8px; color: #1d3427; margin: 2px 0; min-height: 44px; }
+    vertical-navigation-basic-item .fuse-vertical-navigation-item .fuse-vertical-navigation-item-title,
+    vertical-navigation-collapsable-item .fuse-vertical-navigation-item .fuse-vertical-navigation-item-title { color: #1d3427; font-size: .86rem; font-weight: 650; opacity: 1; }
+    vertical-navigation-basic-item .fuse-vertical-navigation-item .fuse-vertical-navigation-item-icon,
+    vertical-navigation-collapsable-item .fuse-vertical-navigation-item .fuse-vertical-navigation-item-icon,
+    vertical-navigation-collapsable-item .fuse-vertical-navigation-item .fuse-vertical-navigation-item-arrow { color: #39775a; opacity: 1; }
+    vertical-navigation-basic-item .fuse-vertical-navigation-item:hover,
+    vertical-navigation-collapsable-item .fuse-vertical-navigation-item:hover { background: #e7f1e9; }
+    vertical-navigation-basic-item .fuse-vertical-navigation-item.fuse-vertical-navigation-item-active { background: #176649; box-shadow: 0 4px 12px rgba(23, 102, 73, .18); color: #fff; }
+    vertical-navigation-basic-item .fuse-vertical-navigation-item.fuse-vertical-navigation-item-active .fuse-vertical-navigation-item-title,
+    vertical-navigation-basic-item .fuse-vertical-navigation-item.fuse-vertical-navigation-item-active .fuse-vertical-navigation-item-icon { color: #fff; }
+    vertical-navigation-collapsable-item.fuse-vertical-navigation-item-expanded > .fuse-vertical-navigation-item-wrapper .fuse-vertical-navigation-item { background: #edf5ef; }
+    vertical-navigation-collapsable-item .fuse-vertical-navigation-item-children { border-left: 1px solid #cadbcf; margin: 2px 0 8px 20px; padding-left: 8px; }
 }
 
 /* Aside, Basic, Collapsable */

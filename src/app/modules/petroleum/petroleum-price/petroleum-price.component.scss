@@ -1,20 +1,23 @@
 /* upload-excel.component.css */
 
+:host { background:#f8f9fa; color:#191c1d; display:block; font-family:'Public Sans',sans-serif; min-height:100%; }
+:host ::ng-deep .absolute.inset-0 { position:relative !important; }.flex-auto { padding:22px 26px 50px; }.flex-auto > .flex { background:#fff; border:0; border-radius:12px; box-shadow:0 2px 12px rgba(25,28,29,.07); margin:0 0 24px; padding:26px; }.flex-auto > .flex .bg-primary { background:#003366; border-radius:8px; padding:20px; }.flex-auto > .flex .text-secondary { color:#9af6b8; }.flex-auto > .flex mat-form-field { background:#f3f4f5; border-radius:8px; }.flex-auto > .flex button[mat-flat-button] { background:#006d3d !important; border-radius:7px; padding:20px 25px !important; }
+
 /* Parent container */
 .parent-container {
       display: flex;
-      justify-content: flex-end; /* Aligns children to the right */
-      margin-right: 30px;
+      justify-content: flex-end;
+      margin: 0 0 22px;
     }
 
 .upload-container {
-  max-width: 400px;
+  max-width: 430px;
   margin: 0; /* Remove margin to avoid offset */
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  border: 1px solid #e1e3e4;
+  border-radius: 10px;
+  box-shadow: 0 2px 9px rgba(25,28,29,.05);
+  background-color: #fff;
 }
     
     .upload-row {
@@ -34,7 +37,7 @@
     }
     
     .custom-file-upload label {
-      background-color: #264a7d; /* Material primary color */
+      background-color: #003366;
       color: white;
       padding: 10px 15px;
       border-radius: 4px;
@@ -46,10 +49,10 @@
     }
     
     .custom-file-upload label:hover {
-      background-color: #303f9f; /* Darker shade on hover */
+      background-color: #006d3d;
     }
     
     button {
       flex-shrink: 0; /* Prevent button from shrinking */
     }
-    
+    :host ::ng-deep table.mat-mdc-table { background:#fff; box-shadow:0 2px 12px rgba(25,28,29,.07); width:100%; }.z-20 { background:transparent; border:0; padding:0; }.z-20 th { background:#e7e8e9; color:#43474f; font-size:.72rem; letter-spacing:.07em; text-transform:uppercase; }.z-20 td,.z-20 th { border-bottom:1px solid #e1e3e4; padding:16px 18px; }.z-20 tr:hover { background:#f3f4f5; }

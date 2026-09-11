@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import { PetroleumDialogComponent } from '../../../dialogs/petroleum/petroleum.component';
-import { PetroleumService } from '../../../core/services/petroleum.service';
+import { PetroleumImportResult, PetroleumService } from '../../../core/services/petroleum.service';
 import { PreviewDialogComponent } from '../../../dialogs/preview-dialog/preview-dialog.component';
 
 import * as XLSX from 'xlsx';
@@ -68,6 +68,8 @@ export class PetroleumProductsComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileName: string = ''; // For displaying selected file name
   uploadProgress: number = 0; // Progress percentage
+  previewData: any[] = [];
+  isUploading = false;
 
   //LOADER
   isLoading:boolean = true
@@ -159,8 +161,19 @@ export class PetroleumProductsComponent implements OnInit {
 
   //FILE
   onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
-    this.selectedFileName = this.selectedFile?.name || ''; // Update the file name
+    const file = event.target.files[0] as File | undefined;
+    if (!file) {
+      return;
+    }
+
+    if (!file.name.toLowerCase().endsWith('.xlsx')) {
+      this.snackBar.open('Please select an Excel .xlsx file.', 'Close', { duration: 4000 });
+      event.target.value = '';
+      return;
+    }
+
+    this.selectedFile = file;
+    this.selectedFileName = this.selectedFile?.name || '';
     this.onFileChange(event);
   }
 
@@ -175,62 +188,109 @@ export class PetroleumProductsComponent implements OnInit {
     const reader: FileReader = new FileReader();
 
     reader.onload = (e: any) => {
-      const bstr: string = e.target.result;
-      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+      const buffer: ArrayBuffer = e.target.result as ArrayBuffer;
+      const wb: XLSX.WorkBook = XLSX.read(buffer, { type: 'array' });
 
-      // Assuming the data is in the first sheet
       const wsname: string = wb.SheetNames[0];
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
-      // Convert the sheet to JSON format
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
       // Open dialog and pass the data
-      this.openPreviewDialog(data);
+      if (data.length < 2) {
+        this.snackBar.open('The selected workbook has no data rows to import.', 'Close', { duration: 4000 });
+        return;
+      }
+
+      const headers = (data[0] as unknown[]).map((header) => String(header ?? '').trim().toLowerCase());
+      if (!headers.includes('name')) {
+        this.resetSelectedFile();
+        this.snackBar.open('The template requires a "name" column.', 'Close', { duration: 5000 });
+        return;
+      }
+
+      const nameIndex = headers.indexOf('name');
+      const names = new Set<string>();
+      const invalidRow = data.slice(1).findIndex((row: any) => {
+        const name = String(row[nameIndex] ?? '').trim();
+        if (!name || names.has(name.toLocaleLowerCase())) {
+          return true;
+        }
+        names.add(name.toLocaleLowerCase());
+        return false;
+      });
+      if (invalidRow !== -1) {
+        this.resetSelectedFile();
+        this.snackBar.open(`Row ${invalidRow + 2} has a blank or duplicate product name.`, 'Close', { duration: 5000 });
+        return;
+      }
+
+      this.previewData = data;
     };
 
-    reader.readAsBinaryString(file);
+    reader.readAsArrayBuffer(file);
   }
 
   openPreviewDialog(data: any[]): void {
     const dialogRef = this.dialog.open(PreviewDialogComponent, {
       width: '80%',
-      height: '80%',
+      maxHeight: '80vh',
       data: data
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'upload') {
-        console.log('Upload confirmed');
-        // Code to handle upload goes here
+        this.onUpload();
       }
     });
   }
 
   onUpload(): void {
-    if (this.selectedFile) {
-      this.petroleumService.uploadExcelFile(this.selectedFile).subscribe({
-        next: (progress) => {
-          if (progress >= 0) {
-            this.uploadProgress = progress; // Update progress
-          }
+    if (this.selectedFile && !this.isUploading) {
+      this.isUploading = true;
+      this.uploadProgress = 35;
+      this.petroleumService.importPetroleumProducts(this.selectedFile).subscribe({
+        next: (response: PetroleumImportResult) => {
+          this.uploadProgress = 100;
+          const { created, skipped_existing } = response.summary;
+          const suffix = skipped_existing ? ` ${skipped_existing} existing product${skipped_existing === 1 ? '' : 's'} skipped.` : '';
+          this.snackBar.open(`${created} product${created === 1 ? '' : 's'} imported.${suffix}`, 'Close', { duration: 6000 });
         },
         error: (error) => {
-          console.error('Error uploading file', error);
+          this.isUploading = false;
+          const rowError = error?.error?.errors?.[0];
+          const message = rowError
+            ? `Row ${rowError.row}: ${rowError.message}`
+            : error?.error?.detail || error?.error?.message || error?.error?.error || 'The file could not be uploaded. Please check the spreadsheet and try again.';
+          this.snackBar.open(message, 'Close', { duration: 6000 });
         },
         complete: () => {
-          console.log('Upload complete');
-          this.uploadProgress = 0; // Reset progress after completion
+          this.uploadProgress = 0;
           this.pageNumber = 1
           this.getPetroleumProduct();
-          this.selectedFile = null;
-          this.selectedFileName = "";
-          this.snackBar.open('File uploaded successfully!', 'Close', { duration: 3000 }); // Notify user
+          this.resetSelectedFile();
+          this.isUploading = false;
         }
       });
     } else {
       console.error('No file selected');
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 3000 });
     }
+  }
+
+  downloadTemplate(): void {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      ['name'],
+      ['Example product name'],
+    ]);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Petroleum products');
+    XLSX.writeFile(workbook, 'erea-petroleum-products-template.xlsx');
+  }
+
+  private resetSelectedFile(): void {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.previewData = [];
   }
 }

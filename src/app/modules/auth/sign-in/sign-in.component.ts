@@ -22,6 +22,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
+    styleUrl: './sign-in.component.scss',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     standalone: true,
@@ -69,10 +70,10 @@ export class AuthSignInComponent implements OnInit {
         // Create the form
         this.signInForm = this._formBuilder.group({
             email: [
-                'kasika@gmail.com',
+                '',
                 [Validators.required, Validators.email],
             ],
-            password: ['kasika@123', Validators.required],
+            password: ['', Validators.required],
             rememberMe: [''],
         });
     }
@@ -129,30 +130,19 @@ export class AuthSignInComponent implements OnInit {
         //     }
         // );
 
-        if(this.signInForm.value.email === "kasika@gmail.com" && this.signInForm.value.password === "kasika@123"){
-            const redirectURL =
-            this._activatedRoute.snapshot.queryParamMap.get(
-                'redirectURL'
-            ) || '/signed-in-redirect';
-
-        // Navigate to the redirect url
-        this._router.navigateByUrl(redirectURL);
-
-        } else {
-              // Re-enable the form
+        this._authService.signIn(this.signInForm.value).subscribe({
+            next: () => {
+                const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+                this._router.navigateByUrl(redirectURL);
+            },
+            error: () => {
                 this.signInForm.enable();
-
-                // Reset the form
-                this.signInNgForm.resetForm();
-
-                // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password',
+                    message: 'The email address or password is incorrect.',
                 };
-
-                // Show the alert
                 this.showAlert = true;
-        }
+            },
+        });
     }
 }

@@ -40,6 +40,12 @@ export class PetroleumService {
     );
   }
 
+  importPetroleumProducts(file: File): Observable<PetroleumImportResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<PetroleumImportResult>(`${this.apiUrl}/upload-excel/`, formData);
+  }
+
   uploadVolumeImportFile(file: File): Observable<number> {
     const formData = new FormData();
     formData.append('file', file);
@@ -154,4 +160,13 @@ export class PetroleumService {
   }
 
 
+}
+
+export interface PetroleumImportResult {
+  message: string;
+  summary: {
+    processed: number;
+    created: number;
+    skipped_existing: number;
+  };
 }

@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { ActivatedRoute, Navigation, Router, RouterOutlet } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { Subject } from "rxjs";
 import { VerticalComponent } from "../../@erea/components/navigation/vertical/vertical.component";
 import { MatButtonModule } from "@angular/material/button";
+import { AuthService } from '../core/auth/auth.service';
 
 @Component({
   selector: 'layout',
@@ -13,6 +14,7 @@ import { MatButtonModule } from "@angular/material/button";
     MatIconModule,
     RouterOutlet,
     MatButtonModule,
+    RouterLink,
     VerticalComponent,
   ],
   templateUrl: './layout.component.html',
@@ -20,9 +22,13 @@ import { MatButtonModule } from "@angular/material/button";
 })
 
 export class LayoutComponent implements OnInit, OnDestroy {
-    isScreenSmall: boolean;
-    navigation: Navigation;
+    isScreenSmall = false;
+    @ViewChild('mainNavigation') mainNavigation?: VerticalComponent;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    private mediaQuery?: MediaQueryList;
+    private readonly updateScreenSize = (): void => {
+        this.isScreenSmall = this.mediaQuery?.matches ?? false;
+    };
 
     /**
      * Constructor
@@ -30,6 +36,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
+        private _authService: AuthService,
         // private _navigationService: NavigationService,
         // private _fuseMediaWatcherService: FuseMediaWatcherService,
         // private _fuseNavigationService: FuseNavigationService
@@ -54,6 +61,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
+        this.mediaQuery = window.matchMedia('(max-width: 959px)');
+        this.updateScreenSize();
+        this.mediaQuery.addEventListener('change', this.updateScreenSize);
         // Subscribe to navigation data
         // this._navigationService.navigation$
         //     .pipe(takeUntil(this._unsubscribeAll))
@@ -74,6 +84,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
      * On destroy
      */
     ngOnDestroy(): void {
+        this.mediaQuery?.removeEventListener('change', this.updateScreenSize);
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -89,20 +100,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
      * @param name
      */
     toggleNavigation(name: string): void {
-        // Get the navigation
-        // const navigation =
-        //     this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
-        //         name
-        //     );
-
-        // if (navigation) {
-        //     // Toggle the opened status
-        //     navigation.toggle();
-        // }
+        this.mainNavigation?.toggle();
     }
 
 
     goToHome() {
         this._router.navigate(['/']); // Replace '/home' with the actual route for your homepage
-      }
+    }
+
+    signOut(): void {
+        localStorage.removeItem('ereaMemberSession');
+        this._authService.signOut().subscribe(() => this._router.navigate(['/auth/sign-in']));
+    }
 }

@@ -3,11 +3,12 @@ import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/co
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-preview-dialog',
   standalone: true,
-  imports: [ MatTableModule, CommonModule, MatPaginatorModule],
+  imports: [MatTableModule, CommonModule, MatPaginatorModule, MatButtonModule],
   templateUrl: './preview-dialog.component.html',
   styleUrl: './preview-dialog.component.scss'
 })
@@ -16,6 +17,10 @@ export class PreviewDialogComponent implements OnInit, AfterViewInit{
 
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>; // Use MatTableDataSource to enable pagination
+
+  get rowCount(): number {
+    return Math.max(0, (this.data?.length || 0) - 1);
+  }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

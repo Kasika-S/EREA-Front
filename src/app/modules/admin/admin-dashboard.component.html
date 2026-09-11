@@ -1,0 +1,50 @@
+<main class="admin-dashboard">
+  <section class="dashboard-hero">
+    <div>
+      <p class="eyebrow">EREA DATAHUB</p>
+      <h1>Regional energy data workspace</h1>
+      <p>Manage validated datasets, monitor your reporting workflow, and publish reliable regional insights.</p>
+    </div>
+    <a routerLink="/admin/petroleum/products" class="primary-link">
+      <mat-icon svgIcon="heroicons_outline:arrow-up-tray"></mat-icon>
+      Start an upload
+    </a>
+  </section>
+
+  <section class="dashboard-section" aria-labelledby="quick-actions-title">
+    <div class="section-heading">
+      <p class="eyebrow">START HERE</p>
+      <h2 id="quick-actions-title">Common tasks</h2>
+    </div>
+    <div class="action-grid">
+      <a routerLink="/admin/petroleum/products" class="action-card">
+        <span class="action-icon"><mat-icon svgIcon="heroicons_outline:archive-box"></mat-icon></span>
+        <strong>Petroleum catalogue</strong>
+        <span>Add products or import a reviewed Excel catalogue.</span>
+      </a>
+      <a routerLink="/admin/petroleum/price" class="action-card">
+        <span class="action-icon"><mat-icon svgIcon="heroicons_outline:currency-dollar"></mat-icon></span>
+        <strong>Petroleum prices</strong>
+        <span>Maintain monthly prices by country and administrative area.</span>
+      </a>
+      <a routerLink="/admin/electricity/electricity-access-rate" class="action-card">
+        <span class="action-icon"><mat-icon svgIcon="heroicons_outline:bolt"></mat-icon></span>
+        <strong>Electricity data</strong>
+        <span>Update generation, capacity, access, and service indicators.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="workflow-card">
+    <div>
+      <p class="eyebrow">SAFE IMPORTS</p>
+      <h2>Every upload should be deliberate.</h2>
+      <p>Use the provided template, review the parsed rows, and import only when the file passes validation. Existing catalogue names are retained instead of duplicated.</p>
+    </div>
+    <ol>
+      <li><span>1</span>Download the template</li>
+      <li><span>2</span>Choose and review the workbook</li>
+      <li><span>3</span>Resolve issues before import</li>
+    </ol>
+  </section>
+</main>

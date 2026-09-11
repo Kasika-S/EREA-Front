@@ -44,7 +44,7 @@ interface Year {
 })
 
 export class GenerationMixChartComponent implements OnInit{
-  selectedYear: string = new Date().getFullYear().toString();
+  selectedYear: string = "2026";
   selectedCountry: string;
 
   country = new FormControl();
@@ -61,7 +61,8 @@ export class GenerationMixChartComponent implements OnInit{
   xEnergyContribution:any;
   yEnergyContribution:any;
 
-  dataPresent:any;
+  generationMixData: any[] = [];
+  energyContributionData: any[] = [];
 
   petroleumProduct: any[] = [];
 
@@ -82,6 +83,7 @@ export class GenerationMixChartComponent implements OnInit{
   }
 
   year: Year[] = [
+    {value: '2026', viewValue: '2026'},
     {value: '2025', viewValue: '2025'},
     {value: '2024', viewValue: '2024'},
     {value: '2023', viewValue: '2023'},
@@ -137,14 +139,16 @@ export class GenerationMixChartComponent implements OnInit{
     this.nonCollapsableService.getGenerationMixSum(year,country).subscribe(
       {
         next: (response) => {
-          this.dataPresent = response.map((item: { electricity_source: any; total_contribution: any; }) => ({
+          const data = Array.isArray(response) ? response : [];
+
+          this.generationMixData = data.map((item: { electricity_source: any; total_contribution: any; }) => ({
             name: item.electricity_source,
             value: item.total_contribution
         }))
 
-          this.xData = response.map((item: { total_contribution: any; }) => item.total_contribution);
-          this.yData = response.map((item: { electricity_source: any; }) => item.electricity_source);
-          console.log("testing data", this.dataPresent.length)
+          this.xData = data.map((item: { total_contribution: any; }) => item.total_contribution);
+          this.yData = data.map((item: { electricity_source: any; }) => item.electricity_source);
+          console.log("testing data", this.generationMixData.length)
         },
         error: (error) => {
           console.log(error.message)
@@ -169,7 +173,7 @@ export class GenerationMixChartComponent implements OnInit{
                     name: 'Generation Mix',
                     type: 'pie',
                     radius: '80%', // Adjusts the size of the pie chart
-                    data: this.dataPresent,
+                    data: this.generationMixData,
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,
@@ -195,13 +199,15 @@ export class GenerationMixChartComponent implements OnInit{
     this.nonCollapsableService.getGenerationContribSum(year,country).subscribe(
       {
         next: (response) => {
-          this.dataPresent = response.map((item: { source: any; total_contribution: any; }) => ({
+          const data = Array.isArray(response) ? response : [];
+
+          this.energyContributionData = data.map((item: { source: any; total_contribution: any; }) => ({
             name: item.source,
             value: item.total_contribution
         }))
 
-          this.yEnergyContribution = response.map((item: { total_contribution: any; }) => item.total_contribution);
-          this.xEnergyContribution = response.map((item: { source: any; }) => item.source);
+          this.yEnergyContribution = data.map((item: { total_contribution: any; }) => item.total_contribution);
+          this.xEnergyContribution = data.map((item: { source: any; }) => item.source);
 
           console.log("testing energy", this.xEnergyContribution)
         },

@@ -1,0 +1,4 @@
+.public-shell { background:#f8f9fa; color:#191c1d; display:flex; flex-direction:column; font-family:'Public Sans',sans-serif; min-height:100vh; }
+.public-shell__header { position:sticky; top:0; z-index:50; }
+.public-shell__content { flex:1; overflow-x:hidden; }
+.public-shell__footer { margin-top:auto; }

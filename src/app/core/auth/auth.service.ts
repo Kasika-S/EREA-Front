@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from './auth.utils';
 // import { UserService } from 'app/core/user/user.service';
 import { environment } from '../../../environments/environment';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, Observable, of, shareReplay, switchMap, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -11,6 +11,7 @@ export class AuthService {
     private apiUrl = environment.apiUrl;
 
     private _authenticated: boolean = false;
+    private _refreshRequest$?: Observable<string>;
     private _httpClient = inject(HttpClient);
     // private _userService = inject(UserService);
 
@@ -27,6 +28,14 @@ export class AuthService {
 
     get accessToken(): string {
         return localStorage.getItem('accessToken') ?? '';
+    }
+
+    set refreshToken(token: string) {
+        localStorage.setItem('refreshToken', token);
+    }
+
+    get refreshToken(): string {
+        return localStorage.getItem('refreshToken') ?? '';
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -62,11 +71,12 @@ export class AuthService {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post(`${this.apiUrl}auth/login/`, credentials).pipe(
+        return this._httpClient.post(`${this.apiUrl}/api/login/`, credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 // this.accessToken = response.accessToken;
                 this.accessToken = response.access;
+                this.refreshToken = response.refresh;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -118,12 +128,41 @@ export class AuthService {
             );
     }
 
+    refreshAccessToken(): Observable<string> {
+        if (!this.refreshToken) {
+            return throwError(() => new Error('No refresh token is available.'));
+        }
+
+        if (!this._refreshRequest$) {
+            this._refreshRequest$ = this._httpClient
+                .post<{ access: string; refresh?: string }>(`${this.apiUrl}/api/token/refresh/`, { refresh: this.refreshToken })
+                .pipe(
+                    switchMap((response) => {
+                        this.accessToken = response.access;
+                        if (response.refresh) {
+                            this.refreshToken = response.refresh;
+                        }
+                        return of(response.access);
+                    }),
+                    catchError((error) => {
+                        this.signOut();
+                        return throwError(() => error);
+                    }),
+                    shareReplay({ bufferSize: 1, refCount: true })
+                );
+            this._refreshRequest$.subscribe({ complete: () => (this._refreshRequest$ = undefined), error: () => (this._refreshRequest$ = undefined) });
+        }
+
+        return this._refreshRequest$;
+    }
+
     /**
      * Sign out
      */
     signOut(): Observable<any> {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
 
         // Set the authenticated flag to false
         this._authenticated = false;
@@ -177,7 +216,7 @@ export class AuthService {
             return of(false);
         }
 
-        // If the access token exists, and it didn't expire, sign in using it
-        return this.signInUsingToken();
+        this._authenticated = true;
+        return of(true);
     }
 }

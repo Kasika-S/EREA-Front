@@ -23,12 +23,14 @@ import { GenerationMixChartComponent } from './modules/user-side/pages/charts/ge
 import { SaidiChartComponent } from './modules/user-side/pages/charts/saidi/saidi.component';
 import { SaifiChartComponent } from './modules/user-side/pages/charts/saifi/saifi.component';
 import { ElectricityChartComponent } from './modules/user-side/pages/charts/electricity/electricity.component';
+import { AdminDashboardComponent } from './modules/admin/admin-dashboard.component';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'signed-in-redirect',
     pathMatch: 'full',
-    redirectTo: '/admin/petroleum/products',
+    redirectTo: '/admin',
   },
 
   // Auth routes for guests
@@ -49,7 +51,13 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
+      {
+        path: '',
+        component: AdminDashboardComponent,
+        pathMatch: 'full',
+      },
       {
         path: '',
         children: [

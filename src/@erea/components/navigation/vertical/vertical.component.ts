@@ -45,7 +45,7 @@ export class VerticalComponent implements AfterViewInit{
   static ngAcceptInputType_transparentOverlay: BooleanInput;
   /* eslint-enable @typescript-eslint/naming-convention */
 
-  navigation: FuseNavigationItem[] = [
+  legacyNavigation: FuseNavigationItem[] = [
     // {
     //     id: 'dashboards',
     //     title: 'Dashboards',
@@ -240,28 +240,84 @@ export class VerticalComponent implements AfterViewInit{
         
         ],
     },
-    {
-        id: 'divider-2',
-        type: 'divider',
-    },
-    {
-        id: 'pages',
-        title: 'Manage User',
-        subtitle: 'Custom made page designs',
-        type: 'group',
-        icon: 'heroicons_outline:document',
-        children: [
-            {
-                id: 'pages.activities',
-                title: 'Users',
-                type: 'basic',
-                icon: 'heroicons_outline:bars-3-bottom-left',
-                link: '/admin/manage-user/list',
-            },
-        
-        ],
-    },
 ];
+
+  navigation: FuseNavigationItem[] = [
+    {
+      id: 'workspace',
+      title: 'WORKSPACE',
+      type: 'group',
+      children: [
+        {
+          id: 'workspace.overview',
+          title: 'Overview',
+          type: 'basic',
+          icon: 'heroicons_outline:squares-2x2',
+          link: '/admin',
+        },
+      ],
+    },
+    {
+      id: 'energy-data',
+      title: 'ENERGY DATA',
+      subtitle: 'Select a dataset to manage',
+      type: 'group',
+      children: [
+        {
+          id: 'energy-data.petroleum',
+          title: 'Petroleum',
+          type: 'collapsable',
+          icon: 'heroicons_outline:beaker',
+          children: [
+            { id: 'petroleum.products', title: 'Product catalogue', type: 'basic', link: '/admin/petroleum/products' },
+            { id: 'petroleum.prices', title: 'Petroleum prices', type: 'basic', link: '/admin/petroleum/price' },
+            { id: 'petroleum.imports', title: 'Volume of imports', type: 'basic', link: '/admin/petroleum/import-volume' },
+          ],
+        },
+        {
+          id: 'energy-data.electricity',
+          title: 'Electricity quality',
+          type: 'collapsable',
+          icon: 'heroicons_outline:bolt',
+          children: [
+            { id: 'electricity.loss', title: 'Electricity loss', type: 'basic', link: '/admin/electricity/electricity-loss' },
+            { id: 'electricity.access', title: 'Access rate', type: 'basic', link: '/admin/electricity/electricity-access-rate' },
+            { id: 'electricity.regulation', title: 'Regulatory index', type: 'basic', link: '/admin/electricity/electricity-reguratory-index' },
+            { id: 'electricity.governance', title: 'Governance index', type: 'basic', link: '/admin/electricity/electricity-governance-index' },
+            { id: 'electricity.substance', title: 'Substance index', type: 'basic', link: '/admin/electricity/electricity-substance-index' },
+            { id: 'electricity.outcome', title: 'Outcome index', type: 'basic', link: '/admin/electricity/electricity-outcome-index' },
+          ],
+        },
+        {
+          id: 'energy-data.power-system',
+          title: 'Power system',
+          type: 'collapsable',
+          icon: 'heroicons_outline:circle-stack',
+          children: [
+            { id: 'power.generation-mix', title: 'Generation mix', type: 'basic', link: '/admin/generation-mix' },
+            { id: 'power.installed-capacity', title: 'Installed capacity', type: 'basic', link: '/admin/installed-capacity' },
+            { id: 'power.effective-capacity', title: 'Effective capacity', type: 'basic', link: '/admin/effective-capacity' },
+            { id: 'power.maximum-demand', title: 'Maximum demand', type: 'basic', link: '/admin/maximum-demand' },
+            { id: 'power.grid-connectivity', title: 'Grid connectivity', type: 'basic', link: '/admin/grid-connectivity' },
+          ],
+        },
+        {
+          id: 'energy-data.service-demand',
+          title: 'Service and demand',
+          type: 'collapsable',
+          icon: 'heroicons_outline:chart-bar-square',
+          children: [
+            { id: 'service.user-tariff', title: 'User tariff', type: 'basic', link: '/admin/user-tariff' },
+            { id: 'service.saidi', title: 'SAIDI', type: 'basic', link: '/admin/saidi' },
+            { id: 'service.saifi', title: 'SAIFI', type: 'basic', link: '/admin/saifi' },
+            { id: 'service.customers', title: 'Connected customers', type: 'basic', link: '/admin/connected-customers' },
+            { id: 'service.load-factor', title: 'System load factor', type: 'basic', link: '/admin/system-load-factor' },
+            { id: 'service.consumption', title: 'Consumption per capita', type: 'basic', link: '/admin/consumption-per-capital' },
+          ],
+        },
+      ],
+    },
+  ];
 
   private _animationBuilder = inject(AnimationBuilder);
   private _changeDetectorRef = inject(ChangeDetectorRef);

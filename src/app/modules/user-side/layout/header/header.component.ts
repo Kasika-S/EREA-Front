@@ -4,7 +4,7 @@ import { CommonModule, NgClass } from '@angular/common';
 
 
 @Component({
-  selector: 'header',
+  selector: 'app-public-header',
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
@@ -13,6 +13,7 @@ import { CommonModule, NgClass } from '@angular/common';
 export class HeaderComponent {
     storeData: any;
     showMenu = false;
+    isMemberSession = localStorage.getItem('ereaMemberSession') === 'true';
 
     constructor( public router: Router, private cdr: ChangeDetectorRef) {
     }
