@@ -16,7 +16,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
-import { PetroleumDialogComponent } from '../../../dialogs/petroleum/petroleum.component';
+import { PetroleumPriceComponent as PetroleumPriceDialogComponent } from '../../../dialogs/petroleum/petroleum-price/petroleum-price.component';
 import { PetroleumService } from '../../../core/services/petroleum.service';
 import { PreviewDialogComponent } from '../../../dialogs/preview-dialog/preview-dialog.component';
 
@@ -118,7 +118,7 @@ export class PetroleumPriceComponent implements OnInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(
-      PetroleumDialogComponent,
+      PetroleumPriceDialogComponent,
       {
         width: '50%',
       }

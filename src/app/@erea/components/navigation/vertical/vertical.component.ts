@@ -240,27 +240,6 @@ export class VerticalComponent implements AfterViewInit{
         
         ],
     },
-    {
-        id: 'divider-2',
-        type: 'divider',
-    },
-    {
-        id: 'pages',
-        title: 'Manage User',
-        subtitle: 'Custom made page designs',
-        type: 'group',
-        icon: 'heroicons_outline:document',
-        children: [
-            {
-                id: 'pages.activities',
-                title: 'Users',
-                type: 'basic',
-                icon: 'heroicons_outline:bars-3-bottom-left',
-                link: '/manage-user/list',
-            },
-        
-        ],
-    },
 ];
 
   private _animationBuilder = inject(AnimationBuilder);

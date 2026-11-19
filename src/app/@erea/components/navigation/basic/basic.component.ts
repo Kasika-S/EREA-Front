@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, Input, OnDestroy, OnInit } from '
 import { FuseNavigationItem } from '../navigation.types';
 import { Subject } from 'rxjs';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -37,7 +37,12 @@ export class BasicComponent
     // will throw an error and stop working.
     // isActiveMatchOptions: IsActiveMatchOptions =
     //     this._fuseUtilsService.subsetMatchOptions;
-    isActiveMatchOptions!: any;
+    isActiveMatchOptions: IsActiveMatchOptions = {
+        paths: 'subset',
+        queryParams: 'subset',
+        matrixParams: 'ignored',
+        fragment: 'ignored',
+    };
 
     // private _fuseVerticalNavigationComponent: FuseVerticalNavigationComponent;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -53,10 +58,21 @@ export class BasicComponent
         // Set the "isActiveMatchOptions" either from item's
         // "isActiveMatchOptions" or the equivalent form of
         // item's "exactMatch" option
-        // this.isActiveMatchOptions =
-        //     this.item.isActiveMatchOptions ?? this.item.exactMatch
-        //         ? this._fuseUtilsService.exactMatchOptions
-        //         : this._fuseUtilsService.subsetMatchOptions;
+        this.isActiveMatchOptions =
+            this.item?.isActiveMatchOptions ??
+            (this.item?.exactMatch
+                ? {
+                      paths: 'exact',
+                      queryParams: 'exact',
+                      matrixParams: 'ignored',
+                      fragment: 'ignored',
+                  }
+                : {
+                      paths: 'subset',
+                      queryParams: 'subset',
+                      matrixParams: 'ignored',
+                      fragment: 'ignored',
+                  });
 
         // Get the parent navigation component
         // this._fuseVerticalNavigationComponent =
