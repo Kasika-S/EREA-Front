@@ -1,0 +1,50 @@
+<main class="admin-dashboard">
+  <section class="dashboard-hero">
+    <div>
+      <p class="eyebrow">EREA DATAHUB</p>
+      <h1>Regional reporting workspace</h1>
+      <p>Prepare, validate, and maintain member-state energy data for EREA's regional monitoring and comparative analysis.</p>
+    </div>
+    <a routerLink="/admin/petroleum/products" class="primary-link">
+      <mat-icon svgIcon="heroicons_outline:arrow-up-tray"></mat-icon>
+      Prepare an upload
+    </a>
+  </section>
+
+  <section class="dashboard-section" aria-labelledby="quick-actions-title">
+    <div class="section-heading">
+      <p class="eyebrow">START HERE</p>
+      <h2 id="quick-actions-title">Common tasks</h2>
+    </div>
+    <div class="action-grid">
+      <a routerLink="/admin/petroleum/products" class="action-card">
+        <span class="action-icon"><mat-icon svgIcon="heroicons_outline:archive-box"></mat-icon></span>
+        <strong>Petroleum reference catalogue</strong>
+        <span>Maintain the product names used in regional price and import reporting.</span>
+      </a>
+      <a routerLink="/admin/petroleum/price" class="action-card">
+        <span class="action-icon"><mat-icon svgIcon="heroicons_outline:currency-dollar"></mat-icon></span>
+        <strong>Petroleum prices</strong>
+        <span>Maintain reported monthly prices by country and administrative area.</span>
+      </a>
+      <a routerLink="/admin/electricity/electricity-access-rate" class="action-card">
+        <span class="action-icon"><mat-icon svgIcon="heroicons_outline:bolt"></mat-icon></span>
+        <strong>Electricity indicators</strong>
+        <span>Maintain generation, capacity, access, reliability, and market indicators.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="workflow-card">
+    <div>
+      <p class="eyebrow">SAFE IMPORTS</p>
+      <h2>Submit traceable reporting data.</h2>
+      <p>Use the approved template, enter the source reporting year, review parsed rows, and import only after validation. Existing catalogue names are retained instead of duplicated.</p>
+    </div>
+    <ol>
+      <li><span>1</span>Choose the matching template</li>
+      <li><span>2</span>Check source, units, and reporting year</li>
+      <li><span>3</span>Review validation results before import</li>
+    </ol>
+  </section>
+</main>

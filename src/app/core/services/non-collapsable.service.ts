@@ -89,6 +89,14 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/user-tariffs/`, data);
   }
 
+  getUserTariffsSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/user-tariffs-sum/${year}/`, { params });
+  }
+
   getGenerationMix(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -104,6 +112,22 @@ export class NonCollapsableService {
 
   addGenerationMix(data: any) {
     return this.http.post<any>(`${this.apiUrl}/generation-mix/`, data);
+  }
+
+  getGenerationMixSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/generation-mix-sum/${year}/`, { params });
+  }
+
+  getGenerationContribSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/generation-contribution-sum/${year}/`, { params });
   }
 
   getSaidi(pageNumber: number, pageSize: number, searchQuery: string) {
@@ -123,6 +147,14 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/saidi/`, data);
   }
 
+  getSaidiSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('country_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/saidi-sum/${year}/`, { params });
+  }
+
   getSaifi(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -138,6 +170,14 @@ export class NonCollapsableService {
 
   addSaifi(data: any) {
     return this.http.post<any>(`${this.apiUrl}/saifi/`, data);
+  }
+
+  getSaifiSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('country_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/saifi-sum/${year}/`, { params });
   }
 
   getInstalledCapacity(pageNumber: number, pageSize: number, searchQuery: string) {
@@ -191,6 +231,14 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/grid-connectivity/`, data);
   }
 
+  getGridConnectivitySum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/grid-connectivity-sum/`, { params });
+  }
+
   getEffectiveCapacity(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -225,6 +273,10 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/number-of-connected-customers/`, data);
   }
 
+  getConnectedCustomersSum(year: string) {
+    return this.http.get<any>(`${this.apiUrl}/connected-customers-sum/${year}/`);
+  }
+
   getSystemLoadFactor(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -242,6 +294,14 @@ export class NonCollapsableService {
     return this.http.post<any>(`${this.apiUrl}/system-load-factor/`, data);
   }
 
+  getSystemLoadFactorSum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/system-load-factor-sum/`, { params });
+  }
+
   getConsumptionPerCapital(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -257,6 +317,10 @@ export class NonCollapsableService {
 
   addConsumptionPerCapital(data: any) {
     return this.http.post<any>(`${this.apiUrl}/consumption-per-capital/`, data);
+  }
+
+  getConsumptionPerCapitalSum(year: string) {
+    return this.http.get<any>(`${this.apiUrl}/consumption-per-capital-sum/${year}/`);
   }
 
 
@@ -283,5 +347,24 @@ export class NonCollapsableService {
 
   addAdmin1(data: any) {
     return this.http.post<any>(`${this.apiUrl}/create_administrative_level1/`, data);
+  }
+
+
+
+  getCrossBorderTariffSum( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/cross-border-tariff-sum/`, { params });
+  }
+
+
+  getCapacity( country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/get-capacity-data/`, { params });
   }
 }

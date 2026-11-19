@@ -1,0 +1,230 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { AuthUtils } from './auth.utils';
+// import { UserService } from 'app/core/user/user.service';
+import { environment } from '../../../environments/environment';
+import { catchError, Observable, of, shareReplay, switchMap, throwError } from 'rxjs';
+
+export type EreaRole = 'super_admin' | 'data_clerk' | 'member_viewer';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+
+    private apiUrl = environment.apiUrl;
+
+    private _authenticated: boolean = false;
+    private _refreshRequest$?: Observable<string>;
+    private _httpClient = inject(HttpClient);
+    // private _userService = inject(UserService);
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Accessors
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Setter & getter for access token
+     */
+    set accessToken(token: string) {
+        localStorage.setItem('accessToken', token);
+    }
+
+    get accessToken(): string {
+        return localStorage.getItem('accessToken') ?? '';
+    }
+
+    set refreshToken(token: string) {
+        localStorage.setItem('refreshToken', token);
+    }
+
+    get refreshToken(): string {
+        return localStorage.getItem('refreshToken') ?? '';
+    }
+
+    get role(): EreaRole | null {
+        return localStorage.getItem('ereaRole') as EreaRole | null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Forgot password
+     *
+     * @param email
+     */
+    forgotPassword(email: string): Observable<any> {
+        return this._httpClient.post('api/auth/forgot-password', email);
+    }
+
+    /**
+     * Reset password
+     *
+     * @param password
+     */
+    resetPassword(password: string): Observable<any> {
+        return this._httpClient.post('api/auth/reset-password', password);
+    }
+
+    /**
+     * Sign in
+     *
+     * @param credentials
+     */
+    signIn(credentials: { email: string; password: string }): Observable<any> {
+        // Throw error, if the user is already logged in
+        if (this._authenticated) {
+            return throwError('User is already logged in.');
+        }
+
+        return this._httpClient.post(`${this.apiUrl}/api/login/`, credentials).pipe(
+            switchMap((response: any) => {
+                // Store the access token in the local storage
+                // this.accessToken = response.accessToken;
+                this.accessToken = response.access;
+                this.refreshToken = response.refresh;
+                localStorage.setItem('ereaRole', response.role ?? 'member_viewer');
+
+                // Set the authenticated flag to true
+                this._authenticated = true;
+
+                // Store the user on the user service
+                // this._userService.user = response.user;
+
+                // Return a new observable with the response
+                return of(response);
+            })
+        );
+    }
+
+    /**
+     * Sign in using the access token
+     */
+    signInUsingToken(): Observable<any> {
+        // Sign in using the token
+        return this._httpClient
+            .post('api/auth/sign-in-with-token', {
+                accessToken: this.accessToken,
+            })
+            .pipe(
+                catchError(() =>
+                    // Return false
+                    of(false)
+                ),
+                switchMap((response: any) => {
+                    // Replace the access token with the new one if it's available on
+                    // the response object.
+                    //
+                    // This is an added optional step for better security. Once you sign
+                    // in using the token, you should generate a new one on the server
+                    // side and attach it to the response object. Then the following
+                    // piece of code can replace the token with the refreshed one.
+                    if (response.accessToken) {
+                        this.accessToken = response.accessToken;
+                    }
+
+                    // Set the authenticated flag to true
+                    this._authenticated = true;
+
+                    // Store the user on the user service
+                    // this._userService.user = response.user;
+
+                    // Return true
+                    return of(true);
+                })
+            );
+    }
+
+    refreshAccessToken(): Observable<string> {
+        if (!this.refreshToken) {
+            return throwError(() => new Error('No refresh token is available.'));
+        }
+
+        if (!this._refreshRequest$) {
+            this._refreshRequest$ = this._httpClient
+                .post<{ access: string; refresh?: string }>(`${this.apiUrl}/api/token/refresh/`, { refresh: this.refreshToken })
+                .pipe(
+                    switchMap((response) => {
+                        this.accessToken = response.access;
+                        if (response.refresh) {
+                            this.refreshToken = response.refresh;
+                        }
+                        return of(response.access);
+                    }),
+                    catchError((error) => {
+                        this.signOut();
+                        return throwError(() => error);
+                    }),
+                    shareReplay({ bufferSize: 1, refCount: true })
+                );
+            this._refreshRequest$.subscribe({ complete: () => (this._refreshRequest$ = undefined), error: () => (this._refreshRequest$ = undefined) });
+        }
+
+        return this._refreshRequest$;
+    }
+
+    /**
+     * Sign out
+     */
+    signOut(): Observable<any> {
+        // Remove the access token from the local storage
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('ereaRole');
+
+        // Set the authenticated flag to false
+        this._authenticated = false;
+
+        // Return the observable
+        return of(true);
+    }
+
+    /**
+     * Sign up
+     *
+     * @param user
+     */
+    signUp(user: {
+        name: string;
+        email: string;
+        password: string;
+        company: string;
+    }): Observable<any> {
+        return this._httpClient.post('api/auth/sign-up', user);
+    }
+
+    /**
+     * Unlock session
+     *
+     * @param credentials
+     */
+    unlockSession(credentials: {
+        email: string;
+        password: string;
+    }): Observable<any> {
+        return this._httpClient.post('api/auth/unlock-session', credentials);
+    }
+
+    /**
+     * Check the authentication status
+     */
+    check(): Observable<boolean> {
+        // Check if the user is logged in
+        if (this._authenticated) {
+            return of(true);
+        }
+
+        // Check the access token availability
+        if (!this.accessToken) {
+            return of(false);
+        }
+
+        // Check the access token expire date
+        if (AuthUtils.isTokenExpired(this.accessToken)) {
+            return of(false);
+        }
+
+        this._authenticated = true;
+        return of(true);
+    }
+}

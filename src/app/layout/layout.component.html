@@ -1,7 +1,8 @@
 <!-- Navigation -->
 
 <vertical-navigation
-    class="dark bg-gray-900 print:hidden"
+    #mainNavigation
+    class="admin-sidebar print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [opened]="!isScreenSmall"
@@ -17,7 +18,7 @@
                 src="../../assets/images/logo/logo-text.svg"
                 alt="Logo image"
             /> -->
-            <h1 class="text-white">EREA</h1>
+            <div class="admin-sidebar-brand"><span>EREA</span><small>DataHub workspace</small></div>
             <!-- Dark version -->
             <!-- <img
                 class="hidden w-30 dark:flex"
@@ -32,14 +33,23 @@
 <div class="flex w-full min-w-0 flex-auto flex-col">
     <!-- Header -->
     <div
-        class="bg-card relative z-49 flex h-16 w-full flex-0 items-center px-4 shadow dark:border-b dark:bg-transparent dark:shadow-none md:px-6 print:hidden"
+        class="admin-topbar relative z-49 flex justify-between h-16 w-full flex-0 items-center px-4 md:px-6 print:hidden"
     >
         <!-- Navigation toggle button -->
         <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
             <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
         </button>
-        <!-- Components -->
-        <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
+        <div class="admin-topbar-actions">
+            <a class="admin-dashboard-link" routerLink="/admin">Dashboard</a>
+            <button
+                class="admin-home-link"
+                mat-flat-button
+                (click)="goToHome()"
+              >
+                <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
+                <span class="ml-2 mr-1">Back to home</span>
+            </button>
+            <button class="admin-signout-link" mat-button (click)="signOut()">Sign out</button>
         </div>
     </div>
 
@@ -54,9 +64,9 @@
 
     <!-- Footer -->
     <div
-        class="bg-card relative z-49 flex h-14 w-full flex-0 items-center justify-start border-t px-4 dark:bg-transparent md:px-6 print:hidden"
+        class="admin-footer relative z-49 flex h-14 w-full flex-0 items-center justify-start px-4 md:px-6 print:hidden"
     >
-        <span class="text-secondary font-medium"
+        <span class="font-extrabold"
             >EREA &copy; {{ currentYear }}</span
         >
     </div>

@@ -1,0 +1,49 @@
+<main class="regulations-page">
+  <section class="regulations-hero" aria-labelledby="regulations-title">
+    <div class="regulations-hero__pattern" aria-hidden="true"></div>
+    <div class="content-width regulations-hero__content">
+      <p class="regulations-eyebrow">Regional regulatory library</p>
+      <h1 id="regulations-title">Policies and laws for East Africa's energy market.</h1>
+      <p>Access a curated collection of energy policies, tariff frameworks, and legislation from across the region.</p>
+    </div>
+  </section>
+
+  <section class="regulations-intro content-width" aria-labelledby="library-title">
+    <div class="regulations-intro__marker"><span>01</span><p>Knowledge hub</p></div>
+    <div>
+      <p class="regulations-eyebrow regulations-eyebrow--dark">Reference material for regulators and stakeholders</p>
+      <h2 id="library-title">Find the framework behind regional energy cooperation.</h2>
+      <p>EREA provides a practical point of access to the laws and policy documents that shape energy-sector regulation across East Africa. Select a document to open the official reference in a new tab.</p>
+    </div>
+  </section>
+
+  <section class="regulations-library content-width" aria-label="Policy and law documents">
+    @for (collection of collections; track collection.title) {
+      <article class="document-collection">
+        <header class="document-collection__header">
+          <span>{{ collection.number }}</span>
+          <div><p>{{ collection.type }}</p><h2>{{ collection.title }}</h2></div>
+          <strong>{{ collection.documents.length }} documents</strong>
+        </header>
+        <ul class="document-list">
+          @for (document of collection.documents; track document.path) {
+            <li>
+              <a [href]="getPdfUrl(document.path)" target="_blank" rel="noopener noreferrer">
+                <span class="document-list__file" aria-hidden="true">PDF</span>
+                <span>{{ document.title }}</span>
+                <span class="document-list__action" aria-hidden="true">Open <b>↗</b></span>
+              </a>
+            </li>
+          }
+        </ul>
+      </article>
+    }
+  </section>
+
+  <section class="regulations-help">
+    <div class="content-width regulations-help__inner">
+      <div><p class="regulations-eyebrow">Looking for another resource?</p><h2>Help us keep the regional library current.</h2></div>
+      <a href="mailto:info@energyregulators.org?subject=EREA%20regulations%20library%20request">Contact EREA <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</main>

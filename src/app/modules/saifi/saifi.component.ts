@@ -23,6 +23,7 @@ import { PreviewDialogComponent } from '../../dialogs/preview-dialog/preview-dia
 import * as XLSX from 'xlsx';
 import { NonCollapsableService } from '../../core/services/non-collapsable.service';
 import { SaifiDialogComponent } from '../../dialogs/saifi/saifi.component';
+import { DeleteDialogComponent } from '../../dialogs/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-saifi',
@@ -57,7 +58,7 @@ export class SaifiComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //TABLE
-  displayedColumns: string[] = ['id', 'saifi', 'country'];
+  displayedColumns: string[] = ['id', 'saifi', 'country','more_options'];
   petroleumProduct: any[] = [];
 
   //PAGINATION
@@ -205,5 +206,34 @@ export class SaifiComponent implements OnInit {
       console.error('No file selected');
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 3000 });
     }
+  }
+
+  openDeleteDialog(id:number) {
+    const dialogRef = this.dialog.open(
+      DeleteDialogComponent,
+      {
+        width: '30%',
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.deleteData(id);
+      }
+    });
+  }
+
+  deleteData(id:number) {
+    // this.petroleumService.deletePetroleumProducts(id).subscribe({
+    //   next: (response) => {
+    //     console.log('Data deleted!', response);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error uploading file', error);
+    //   },
+    //   complete: () => {
+    //     // this.getPetroleumProduct()
+    //   }
+    // });
   }
 }

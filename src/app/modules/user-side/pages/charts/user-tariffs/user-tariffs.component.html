@@ -1,0 +1,69 @@
+<div class="overflow-x-hidden">
+      <!-- <div class="overflow-hidden bg-black pt-[82px] sm:-mx-[250px] sm:rounded-b-[50%] lg:-mx-[150px] lg:pt-[106px]">
+
+            <div class="container relative bg-[url(/assets/images/world-map.png)] bg-cover">
+                  <div class="flex flex-col items-center gap-7 lg:flex-row">
+                        <div
+                              class="flex-1 pb-14 pt-14 text-white text-center rtl:text-center lg:max-w-full lg:pb-52 lg:!text-left rtl:lg:!text-right xl:pt-36">
+                              <h2 class="text-xl font-extrabold sm:text-xl lg:!text-[70px] lg:leading-[89px]">
+                                    User Tariff
+                              </h2>
+                        </div>
+                  </div>
+            </div>
+      </div> -->
+
+      <section
+            class="bg-gradient-to-b from-transparent to-white/[55%] py-10 dark:bg-gradient-to-t dark:from-white/5 dark:to-transparent lg:py-20">
+            <div class="container">
+                  <div class="heading text-center">
+                        <!-- <h6 class="!text-secondary">User Tariffs</h6>
+                        <h4>End User Tariffs</h4> -->
+                            
+
+                    <!-- Year -->
+                    <div class="flex flex-row px-6 pb-2 gap-3 mt-5">
+
+                        <mat-form-field class="w-1/2">
+                              <mat-label>Year</mat-label>
+                              <mat-select [(ngModel)]="selectedYear" name="year" (selectionChange)="onYearChange($event)">
+                                @for (year of year; track year) {
+                                  <mat-option [value]="year.value">{{year.viewValue}}</mat-option>
+                                }
+                              </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-1/2">
+                              <mat-label>Country</mat-label>
+                              <mat-select [formControl]="country" multiple>
+                                    @for (country of countryList ; track trackByFn) {
+                                          <mat-option (click)="onCountryClicked($event,country)" [value]="country.id">{{country.name}}</mat-option>
+                                    }
+                              </mat-select>
+                        </mat-form-field> 
+                    </div>
+                            
+                  </div>
+            </div>
+      </section>
+
+      <section class="relative bg-white pt-14 lg:pb-48 lg:pt-[100px]">
+
+            @if (this.isDataPresent.length == 0) {
+                  <div class="flex items-center justify-center bg-gray-100 p-4">
+                        <div class="bg-white p-8 rounded-lg shadow-lg flex items-center space-x-4 max-w-md w-full text-center">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0l-4-4m4 4l4-4M12 12l4 4m-4-4l-4 4M4 12v6h16V6H4v6z"></path>
+                           </svg>
+                           <div>
+                               <h2 class="text-xl font-semibold text-gray-700">No Data Available</h2>
+                               <p class="text-gray-500 mt-2">We couldn't find any data to display. Please try again and adjust your filters.</p>
+                           </div>
+                        </div>
+                  </div>     
+            } 
+            @else {
+                  <div echarts [options]="chartOption" class="demo-chart"></div>
+            }
+      </section>
+</div>

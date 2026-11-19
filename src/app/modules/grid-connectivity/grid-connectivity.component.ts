@@ -23,6 +23,7 @@ import { PreviewDialogComponent } from '../../dialogs/preview-dialog/preview-dia
 import * as XLSX from 'xlsx';
 import { NonCollapsableService } from '../../core/services/non-collapsable.service';
 import { GridDialogConnectivityComponent } from '../../dialogs/grid-connectivity/grid-connectivity.component';
+import { DeleteDialogComponent } from '../../dialogs/delete-dialog/delete-dialog.component';
 @Component({
   selector: 'app-grid-connectivity',
   standalone: true,
@@ -55,7 +56,7 @@ export class GridConnectivityComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //TABLE
-  displayedColumns: string[] = ['id', 'connectivity_percentage','country'];
+  displayedColumns: string[] = ['id', 'connectivity_percentage','country','more_options'];
   petroleumProduct: any[] = [];
 
   //PAGINATION
@@ -203,5 +204,35 @@ export class GridConnectivityComponent implements OnInit {
       console.error('No file selected');
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 3000 });
     }
+  }
+
+
+  openDeleteDialog(id:number) {
+    const dialogRef = this.dialog.open(
+      DeleteDialogComponent,
+      {
+        width: '30%',
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.deleteData(id);
+      }
+    });
+  }
+
+  deleteData(id:number) {
+    // this.petroleumService.deletePetroleumProducts(id).subscribe({
+    //   next: (response) => {
+    //     console.log('Data deleted!', response);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error uploading file', error);
+    //   },
+    //   complete: () => {
+    //     // this.getPetroleumProduct()
+    //   }
+    // });
   }
 }

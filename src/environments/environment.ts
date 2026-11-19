@@ -1,5 +1,5 @@
 export const environment = {
 
   production: false,
-  apiUrl: 'http://127.0.0.1:8000/', // API endpoint for local development
+  apiUrl: 'http://127.0.0.1:8001', // API endpoint for local development
 };

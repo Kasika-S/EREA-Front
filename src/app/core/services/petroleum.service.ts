@@ -40,6 +40,12 @@ export class PetroleumService {
     );
   }
 
+  importPetroleumProducts(file: File): Observable<PetroleumImportResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<PetroleumImportResult>(`${this.apiUrl}/upload-excel/`, formData);
+  }
+
   uploadVolumeImportFile(file: File): Observable<number> {
     const formData = new FormData();
     formData.append('file', file);
@@ -87,6 +93,10 @@ export class PetroleumService {
     return this.http.post<any>(`${this.apiUrl}/petroleum-products/`, data);
   }
 
+  deletePetroleumProducts(id: any) {
+    return this.http.delete<any>(`${this.apiUrl}/petroleum-products/${id}`);
+  }
+
   getPetroleumPrice(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
     if (searchQuery) {
@@ -106,6 +116,21 @@ export class PetroleumService {
     return this.http.post<any>(`${this.apiUrl}/petroleum-price/`, data);
   }
 
+  getPetroleumMontlyPriceSum(year: string, product:any) {
+    let params = new HttpParams();
+    if(product){
+      params = params.set('petroleum_product', product);
+    }
+    return this.http.get<any>(`${this.apiUrl}/monthly-petroleum-sum/${year}/`, { params });
+  }
+
+  getMonthlyPetroleumPrices(year: string, country_id:any) {
+    let params = new HttpParams();
+    if (country_id) {
+      params = params.set('county_ids', country_id);
+    }
+    return this.http.get<any>(`${this.apiUrl}/monthly-petroleum-prices/${year}/`, { params });
+  }
 
   getVolumeImports(pageNumber: number, pageSize: number, searchQuery: string) {
     let params = new HttpParams();
@@ -126,5 +151,22 @@ export class PetroleumService {
     return this.http.post<any>(`${this.apiUrl}/volume-imports/`, data);
   }
 
+  getImportVolumeSum(year: string, country:any) {
+    let params = new HttpParams();
+    if(country){
+      params = params.set('county_ids', country);
+    }
+    return this.http.get<any>(`${this.apiUrl}/volume-imports-sum/${year}/`, { params });
+  }
 
+
+}
+
+export interface PetroleumImportResult {
+  message: string;
+  summary: {
+    processed: number;
+    created: number;
+    skipped_existing: number;
+  };
 }

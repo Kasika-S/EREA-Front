@@ -22,12 +22,12 @@ import { PreviewDialogComponent } from '../../../dialogs/preview-dialog/preview-
 
 import * as XLSX from 'xlsx';
 import { PetroleumVolumeDialogComponent } from '../../../dialogs/petroleum/petroleum-volume/petroleum-volume.component';
+import { DeleteDialogComponent } from '../../../dialogs/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-petroleum-volume',
   standalone: true,
   imports: [
-    RouterOutlet,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -36,10 +36,7 @@ import { PetroleumVolumeDialogComponent } from '../../../dialogs/petroleum/petro
     FormsModule,
     MatMenuModule,
     ReactiveFormsModule,
-    NgClass,
     NgIf,
-    RouterLink,
-    AsyncPipe,
     I18nPluralPipe,
     MatDialogModule,
     MatPaginatorModule,
@@ -56,7 +53,7 @@ export class PetroleumVolumeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //TABLE
-  displayedColumns: string[] = ['id', 'petroleum_product','country','volume'];
+  displayedColumns: string[] = ['id', 'petroleum_product','country','volume','more_options'];
   petroleumProduct: any[] = [];
 
   //PAGINATION
@@ -204,5 +201,34 @@ export class PetroleumVolumeComponent implements OnInit {
       console.error('No file selected');
       this.snackBar.open('Please select a file to upload.', 'Close', { duration: 3000 });
     }
+  }
+
+  openDeleteDialog(id:number) {
+    const dialogRef = this.dialog.open(
+      DeleteDialogComponent,
+      {
+        width: '30%',
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.deleteData(id);
+      }
+    });
+  }
+
+  deleteData(id:number) {
+    this.petroleumService.deletePetroleumProducts(id).subscribe({
+      next: (response) => {
+        console.log('Data deleted!', response);
+      },
+      error: (error) => {
+        console.error('Error uploading file', error);
+      },
+      complete: () => {
+        // this.getPetroleumProduct()
+      }
+    });
   }
 }

@@ -1,14 +1,34 @@
 const colors = require("tailwindcss/colors");
 
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
+    container: {
+      center: true,
+      padding: '1rem',
+  },
+  screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1142px',
+  },
     extend: {
       colors: {
         primary: {
           ...colors.blue,
-          DEFAULT: colors.blue[900],
+          DEFAULT: '#264a7d',
+        },
+        secondary: '#edb33d',
+        white: '#ffffff',
+        black: '#08111F',
+        card: '#FFFFFF',
+        disabled: colors.slate[400],
+        gray: {
+          DEFAULT: '#7780A1',
+          dark: '#1C2331',
         },
         accent: {
           ...colors.slate,
@@ -19,6 +39,22 @@ module.exports = {
           DEFAULT: colors.red[600],
         },
       },
+
+      animation: {
+        'spin-slow': 'spin 5s linear infinite',
+    },
+    fontFamily: {
+      mulish: ['Mulish', 'sans-serif'],
+      reey: ['reey', 'sans-serif'],
+  },
+    typography: ({ theme }) => ({
+        DEFAULT: {
+            css: {
+                color: theme('colors.gray'),
+                fontSize: '1.125rem',
+            },
+        },
+    }),
 
       fontSize: {
         'xs'  : '0.625rem',

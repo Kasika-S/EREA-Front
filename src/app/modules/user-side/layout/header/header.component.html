@@ -1,0 +1,9 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" routerLink="/" (click)="showMenu = false" aria-label="EREA DataHub home"><img src="/assets/images/logo/erea__logo.png" alt="East African Regional Energy Regulatory Authority" /><span>DataHub</span></a>
+    <button class="menu-toggle" type="button" (click)="toggleMenu()" [attr.aria-expanded]="showMenu" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+    <nav class="site-nav" [class.site-nav--open]="showMenu" aria-label="Main navigation">
+      <a routerLink="/about-us" routerLinkActive="active" (click)="showMenu = false">About EREA</a><a routerLink="/regulations" routerLinkActive="active" (click)="showMenu = false">Regulatory library</a><a routerLink="/our-partners" routerLinkActive="active" (click)="showMenu = false">Member institutions</a><a routerLink="/chart/electricity" routerLinkActive="active" (click)="showMenu = false">Data dashboards</a>@if (isMemberSession) {<a class="nav-login" routerLink="/admin/petroleum/products" (click)="showMenu = false">Member workspace</a>} @else {<a class="nav-login" routerLink="/auth/sign-in" (click)="showMenu = false">Member sign in</a>}
+    </nav>
+  </div>
+</header>

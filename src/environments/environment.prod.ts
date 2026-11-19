@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://199.192.23.162:8000/', // API endpoint for production
+  // Caddy proxies this path to Django, so browser requests stay on the HTTPS origin.
+  apiUrl: '/api',
 };
