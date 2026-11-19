@@ -165,7 +165,7 @@ export class CrossBorderPowerChartComponent implements OnInit{
         complete: () => {
           this.chartCrossBoderPowerExchangeTariff = {
             title: {
-              text: 'Cross-Boder Powe Exchange Tariff',
+              text: 'Cross-Border Power Exchange Tariff',
               left: 'center'
           },
           tooltip: {

@@ -17,7 +17,7 @@
             class="bg-gradient-to-b from-transparent to-white/[55%] py-5 dark:bg-gradient-to-t dark:from-white/5 dark:to-transparent lg:py-10">
             <div class="container">
                   <div class="heading text-center bg-white">
-                        <h6 class="!text-black !text-2xl">Filter</h6>
+                        <h6 class="!text-black !text-2xl">Compare reported generation data</h6>
 
                         <!-- Year -->
                         <div class="flex flex-row px-6 pb-2  gap-3 mt-5">
@@ -59,9 +59,8 @@
                                     d="M12 6v6m0 0l-4-4m4 4l4-4M12 12l4 4m-4-4l-4 4M4 12v6h16V6H4v6z"></path>
                         </svg>
                         <div>
-                              <h2 class="text-xl font-semibold text-gray-700">No Data Available</h2>
-                              <p class="text-gray-500 mt-2">We couldn't find any data to display. Please try again and
-                                    adjust your filters.</p>
+                              <h2 class="text-xl font-semibold text-gray-700">No generation-mix records for this selection</h2>
+                              <p class="text-gray-500 mt-2">Select another reporting year or member state, or submit a validated generation-mix workbook.</p>
                         </div>
                   </div>
             </div>
@@ -71,7 +70,7 @@
                   <div class="container relative bg-white z-[1] shadow-md">
                         <div class="text-center">
                               <div class="heading mb-5 bg-primary text-center xl:w-[95%]">
-                                    <h4 class="p-5 !text-secondary">Generation Mix</h4>
+                                    <h4 class="p-5 !text-secondary">Generation mix by source (%)</h4>
                               </div>
                               <div echarts [options]="chartOption" class="demo-chart"></div>
                         </div>
@@ -85,7 +84,7 @@
                   <div class="container relative bg-white z-[1] shadow-md">
                   <div class="text-center">
                         <div class="heading mb-5 bg-primary text-center xl:w-[95%]">
-                              <h4 class="p-5 !text-secondary">MW Contribution</h4>
+                              <h4 class="p-5 !text-secondary">Installed generation capacity by source (MW)</h4>
                         </div>
                         <div echarts [options]="chartEnergyContribution" class="demo-chart"></div>
                   </div>
@@ -101,9 +100,8 @@
                                     d="M12 6v6m0 0l-4-4m4 4l4-4M12 12l4 4m-4-4l-4 4M4 12v6h16V6H4v6z"></path>
                         </svg>
                         <div>
-                              <h2 class="text-xl font-semibold text-gray-700">No Data Available</h2>
-                              <p class="text-gray-500 mt-2">We couldn't find any data to display. Please try again and
-                                    adjust your filters.</p>
+                              <h2 class="text-xl font-semibold text-gray-700">No installed-capacity mix records for this selection</h2>
+                              <p class="text-gray-500 mt-2">Select another reporting year or member state, or submit a validated capacity workbook.</p>
                         </div>
                   </div>
             </div>

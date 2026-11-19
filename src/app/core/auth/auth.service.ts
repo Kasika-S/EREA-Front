@@ -5,6 +5,8 @@ import { AuthUtils } from './auth.utils';
 import { environment } from '../../../environments/environment';
 import { catchError, Observable, of, shareReplay, switchMap, throwError } from 'rxjs';
 
+export type EreaRole = 'super_admin' | 'data_clerk' | 'member_viewer';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
@@ -36,6 +38,10 @@ export class AuthService {
 
     get refreshToken(): string {
         return localStorage.getItem('refreshToken') ?? '';
+    }
+
+    get role(): EreaRole | null {
+        return localStorage.getItem('ereaRole') as EreaRole | null;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -77,6 +83,7 @@ export class AuthService {
                 // this.accessToken = response.accessToken;
                 this.accessToken = response.access;
                 this.refreshToken = response.refresh;
+                localStorage.setItem('ereaRole', response.role ?? 'member_viewer');
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -163,6 +170,7 @@ export class AuthService {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('ereaRole');
 
         // Set the authenticated flag to false
         this._authenticated = false;

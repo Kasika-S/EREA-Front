@@ -15,7 +15,6 @@ import { MajorServiceComponent } from './modules/user-side/pages/major-service/m
 import { OtherServiceComponent } from './modules/user-side/pages/other-service/other-service.component';
 import { OurProjectComponent } from './modules/user-side/pages/our-project/our-project.component';
 import { ServiceDetailsComponent } from './modules/user-side/pages/service-details/service-details.component';
-import { NewsComponent } from './modules/user-side/pages/news/news.component';
 import { HomeComponent } from './modules/user-side/home/home.component';
 import { PetroleumChartComponent } from './modules/user-side/pages/charts/petroleum/petroleum.component';
 import { UserTariffsChartComponent } from './modules/user-side/pages/charts/user-tariffs/user-tariffs.component';
@@ -25,6 +24,7 @@ import { SaifiChartComponent } from './modules/user-side/pages/charts/saifi/saif
 import { ElectricityChartComponent } from './modules/user-side/pages/charts/electricity/electricity.component';
 import { AdminDashboardComponent } from './modules/admin/admin-dashboard.component';
 import { authGuard } from './core/auth/auth.guard';
+import { workspaceGuard } from './core/auth/workspace.guard';
 
 export const routes: Routes = [
   {
@@ -51,7 +51,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: LayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard, workspaceGuard],
     children: [
       {
         path: '',
@@ -157,10 +157,11 @@ export const routes: Routes = [
             title: 'Build with us',
           },
           {
-            path: 'ceo-message',
+            path: 'regulations',
             component: CeoMessageComponent,
-            title: 'Policy And Law',
+            title: 'Regulations | EREA DataHub',
           },
+          { path: 'ceo-message', pathMatch: 'full', redirectTo: 'regulations' },
           {
             path: 'mission-vision',
             component: MissionVisionComponent,
@@ -201,7 +202,7 @@ export const routes: Routes = [
             component: ServiceDetailsComponent,
             title: 'Service Detail',
           },
-          { path: 'news', component: NewsComponent, title: 'News' },
+          { path: 'news', pathMatch: 'full', redirectTo: '' },
           {
             path: 'chart/petroleum',
             component: PetroleumChartComponent,

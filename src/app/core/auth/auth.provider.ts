@@ -5,12 +5,12 @@ import {
     Provider,
     inject,
 } from '@angular/core';
-// import { authInterceptor } from 'app/core/auth/auth.interceptor';
+import { authInterceptor } from './auth.interceptor';
 import { AuthService } from './auth.service';
 
 export const provideAuth = (): Array<Provider | EnvironmentProviders> => {
     return [
-        provideHttpClient(withInterceptors([])),
+        provideHttpClient(withInterceptors([authInterceptor])),
         {
             provide: ENVIRONMENT_INITIALIZER,
             useValue: () => inject(AuthService),
