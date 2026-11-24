@@ -43,7 +43,7 @@ interface Year {
 
 
 export class SystemLoadFactorChartComponent implements OnInit{
-  selectedYear: string = "2026";
+  selectedYear: string = "2024";
   selectedCountry: string;
 
 
@@ -216,25 +216,22 @@ export class SystemLoadFactorChartComponent implements OnInit{
         });
       });
 
-      // Extract x-axis years from the first group
-      const firstCounty = Object.keys(grouped)[0];
-      this.xSystemLoadFactor = firstCounty ? grouped[firstCounty].map((d: any) => d.year) : [];
-
-      // Generate all line series
-      this.seriesSystemLoadFactor = Object.keys(grouped).map((county, index) => ({
-        name: county,
-        type: 'line',
-        data: grouped[county].map((d: any) => d.value),
-        smooth: true,
-        lineStyle: {
-          width: 3
-        },
-        label: {
-          show: true,
-          position: 'top',
-          fontSize: 12
-        }
-      }));
+      const reportingYear = Number(this.selectedYear);
+      const snapshot = Object.entries(grouped)
+        .map(([country, values]: [string, any]) => ({
+          country,
+          value: values.find((item: any) => item.year === reportingYear)?.value,
+        }))
+        .filter((item) => item.value !== undefined)
+        .sort((a, b) => a.value - b.value);
+      this.xSystemLoadFactor = snapshot.map((item) => item.country);
+      this.seriesSystemLoadFactor = [{
+        name: `${reportingYear} load factor`,
+        type: 'bar',
+        data: snapshot.map((item) => item.value),
+        itemStyle: { color: '#0e7c78', borderRadius: [0, 6, 6, 0] },
+        label: { show: true, position: 'right', formatter: '{c}%' },
+      }];
     },
 
     error: (error) => console.log(error.message),
@@ -249,21 +246,16 @@ export class SystemLoadFactorChartComponent implements OnInit{
           trigger: 'axis'
         },
         legend: {
-          top: '8%'
+          show: false
         },
         xAxis: {
-          type: 'category',
-          data: this.xSystemLoadFactor,
-          name: 'Years',
-          nameLocation: 'middle',
-          nameTextStyle: { fontWeight: 'bold', padding: 30 }
-        },
-        yAxis: {
           type: 'value',
           name: 'Load Factor (%)',
-          nameLocation: 'middle',
-          nameRotate: 90,
-          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+          max: 100
+        },
+        yAxis: {
+          type: 'category',
+          data: this.xSystemLoadFactor,
         },
         series: this.seriesSystemLoadFactor
       };

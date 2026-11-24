@@ -22,6 +22,7 @@ import { PreviewDialogComponent } from '../../../dialogs/preview-dialog/preview-
 
 import * as XLSX from 'xlsx';
 import { ElectricityService } from '../../../core/services/electricity.service';
+import { NonCollapsableService } from '../../../core/services/non-collapsable.service';
 import { ElectricityLossDialogComponent } from '../../../dialogs/electricity/electricity-loss/electricity-loss.component';
 
 @Component({
@@ -76,7 +77,11 @@ export class ElectricityLossComponent implements OnInit {
   //SEARCHING
   searchQuery: string = '';
 
-  constructor(private electricityService: ElectricityService, private snackBar: MatSnackBar) { }
+  constructor(
+    private electricityService: ElectricityService,
+    private nonCollapsableService: NonCollapsableService,
+    private snackBar: MatSnackBar,
+  ) { }
 
   ngOnInit(): void {
     this.getPetroleumProduct()
@@ -181,7 +186,7 @@ export class ElectricityLossComponent implements OnInit {
 
   onUpload(): void {
     if (this.selectedFile) {
-      this.electricityService.uploadExcelFile(this.selectedFile).subscribe({
+      this.nonCollapsableService.uploadExcelFileToDB(this.selectedFile, 'electricity-loss').subscribe({
         next: (progress) => {
           if (progress >= 0) {
             this.uploadProgress = progress; // Update progress

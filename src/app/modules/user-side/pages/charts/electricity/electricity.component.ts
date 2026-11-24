@@ -1,5 +1,6 @@
 import { CommonModule, NgClass } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 // import 'echarts-gl';
@@ -35,7 +36,7 @@ interface Year {
 @Component({
   selector: 'app-electricity',
   standalone: true,
-  imports: [CommonModule, NgxEchartsDirective,
+  imports: [CommonModule, RouterLink, NgxEchartsDirective,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
@@ -104,6 +105,7 @@ export class ElectricityChartComponent implements OnInit{
 
   xAccessRate:any;
   yAccessRate:any;
+  accessCountries: string[] = [];
 
   xCrossBorderTariff:any;
   yCrossBorderTariff:any;
@@ -135,7 +137,7 @@ export class ElectricityChartComponent implements OnInit{
   ngOnInit(): void {
     this.getCountry()
 
-    this.getElectricitySum("")
+    this.getElectricityLossChart("")
     this.getElectricityRegulatoryIndex("")
     this.getElectricityGovernanceIndex("")
     this.getElectricitySubstanceIndex("")
@@ -438,6 +440,31 @@ export class ElectricityChartComponent implements OnInit{
     )
   }
 
+  getElectricityLossChart(country: any) {
+    this.electricityService.getElectricitySum(country).subscribe({
+      next: (response) => {
+        const series = Array.isArray(response) ? response : [];
+        const years = Array.from(new Set(series.flatMap((item: any) => item.data.map((value: any) => value.year)))).sort();
+        const palette: Record<string, string> = { system: '#0e7c78', technical: '#d99027', commercial: '#123047' };
+        this.chartOption = {
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          legend: { top: 8 },
+          grid: { left: 58, right: 24, top: 52, bottom: 42 },
+          xAxis: { type: 'category', data: years, name: 'Reporting year' },
+          yAxis: { type: 'value', name: 'Regional loss (%)' },
+          series: series.map((item: any) => ({
+            name: item.type_of_loss === 'system' ? 'System loss' : `${item.type_of_loss[0].toUpperCase()}${item.type_of_loss.slice(1)} loss`,
+            type: 'bar',
+            data: years.map((year: number) => item.data.find((value: any) => value.year === year)?.loss_percentage ?? null),
+            itemStyle: { color: palette[item.type_of_loss] ?? '#6b7280', borderRadius: [4, 4, 0, 0] },
+            label: { show: true, position: 'top', formatter: '{c}%' },
+          })),
+        };
+      },
+      error: (error) => console.log(error.message),
+    });
+  }
+
 
   getElectricityRegulatoryIndex(country:any) {
     this.electricityService.getElectricityRegulatorySum(country).subscribe(
@@ -719,38 +746,25 @@ export class ElectricityChartComponent implements OnInit{
       //   { country: 'Kenya', values: [...] },
       // ]
 
-      // 1️⃣ Collect all years
       const allYears = new Set<number>();
       response.forEach((c: any) => {
         c.values.forEach((v: any) => allYears.add(v.year));
       });
 
-      this.xAccessRate = Array.from(allYears).sort(); // sorted years
-
-      // 2️⃣ Build series for each country
-      this.seriesData = response.map((c: any) => ({
-        name: c.country,
-        type: 'line',
-        data: this.xAccessRate.map((year:any) => {
-          const found = c.values.find((v: any) => v.year === year);
-          return found ? found.value : 0; // return 0 if no value for this year
-        }),
-        lineStyle: {
-          width: 3
-        },
-        emphasis: {
-          focus: 'series'
-        },
-        label: {
-          show: true,
-          position: 'top',
-          color: 'black',
-          fontSize: 12
-        }
+      this.xAccessRate = Array.from(allYears).sort();
+      this.accessCountries = response.map((country: any) => country.country);
+      this.legendData = this.xAccessRate.map(String);
+      const accessRatePalette = [
+        '#123047', '#0e7c78', '#d99027', '#bd4f6c',
+        '#5a6fb2', '#5b8c42', '#8c5b35', '#6a4c93',
+      ];
+      this.seriesData = this.xAccessRate.map((year: number, index: number) => ({
+        name: String(year),
+        type: 'bar',
+        data: response.map((country: any) => country.values.find((value: any) => value.year === year)?.value ?? null),
+        itemStyle: { color: accessRatePalette[index % accessRatePalette.length], borderRadius: [4, 4, 0, 0] },
+        label: { show: true, position: 'top', formatter: '{c}%' },
       }));
-
-      // 3️⃣ Legend list (country names)
-      this.legendData = response.map((c: any) => c.country);
     },
 
     error: (error) => {
@@ -774,8 +788,8 @@ export class ElectricityChartComponent implements OnInit{
         },
         xAxis: {
           type: 'category',
-          data: this.xAccessRate,
-          name: 'Years',
+          data: this.accessCountries,
+          name: 'Member state',
           nameLocation: 'middle',
           nameTextStyle: {
             fontWeight: 'bold',
@@ -784,7 +798,7 @@ export class ElectricityChartComponent implements OnInit{
         },
         yAxis: {
           type: 'value',
-          name: 'Access Rate Percentage',
+          name: 'Access Rate (%)',
           nameLocation: 'middle',
           nameRotate: 90,
           nameTextStyle: {

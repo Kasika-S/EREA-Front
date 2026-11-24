@@ -44,7 +44,7 @@ interface Year {
 })
 
 export class GridConnectivityChartComponent implements OnInit{
-  selectedYear: string = "2026";
+  selectedYear: string = "2024";
   selectedCountry: string;
 
 
@@ -202,30 +202,14 @@ export class GridConnectivityChartComponent implements OnInit{
     next: (response) => {
       console.log("Grid Connectivity API:", response);
 
-      const legendData: string[] = [];
-      const seriesData: any[] = [];
-      let xAxisYears: number[] = [];
-
-      response.forEach((item: any) => {
-        legendData.push(item.country);
-
-        const sortedValues = item.values.sort((a: any, b: any) => a.year - b.year);
-
-        if (xAxisYears.length === 0) {
-          xAxisYears = sortedValues.map((v: any) => v.year);
-        }
-
-        seriesData.push({
-          name: item.country,
-          type: 'line',
-          data: sortedValues.map((v: any) => v.value),
-          lineStyle: { width: 3 },
-          label: {
-            show: true,
-            position: 'top'
-          }
-        });
-      });
+      const reportingYear = Number(this.selectedYear);
+      const snapshot = response
+        .map((item: any) => ({
+          country: item.country,
+          value: item.values.find((value: any) => value.year === reportingYear)?.value,
+        }))
+        .filter((item: any) => item.value !== undefined)
+        .sort((a: any, b: any) => a.value - b.value);
 
       this.chartGridConnectivity = {
         title: {
@@ -233,27 +217,25 @@ export class GridConnectivityChartComponent implements OnInit{
           left: 'center'
         },
         tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: legendData,
-          top: 30
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' }
         },
         xAxis: {
-          type: 'category',
-          data: xAxisYears,
-          name: 'Years',
-          nameLocation: 'middle',
-          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+          type: 'value',
+          name: 'Connectivity (%)',
+          max: 100
         },
         yAxis: {
-          type: 'value',
-          name: 'Connectivity Percentage',
-          nameLocation: 'middle',
-          nameRotate: 90,
-          nameTextStyle: { fontWeight: 'bold', padding: 30 }
+          type: 'category',
+          data: snapshot.map((item: any) => item.country),
         },
-        series: seriesData
+        series: [{
+          name: `${reportingYear} connectivity`,
+          type: 'bar',
+          data: snapshot.map((item: any) => item.value),
+          itemStyle: { color: '#d99027', borderRadius: [0, 6, 6, 0] },
+          label: { show: true, position: 'right', formatter: '{c}%' },
+        }]
       };
     },
     error: (error) => {

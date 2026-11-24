@@ -57,6 +57,7 @@ export class CapacityChartComponent implements OnInit{
   chartCapacity: EChartsOption;
 
   capacityYears:any;
+  countries:any[] = [];
   effectiveCapacity:any;
   installedCapacity:any;
   maximumDemand:any;
@@ -137,6 +138,7 @@ export class CapacityChartComponent implements OnInit{
       {
         next: (response) => {
           this.capacityYears = response.years;
+          this.countries = response.countries;
           this.effectiveCapacity = response.effective_capacity;
           this.installedCapacity = response.installed_capacity;
           this.maximumDemand = response.maximum_demand;
@@ -151,6 +153,11 @@ export class CapacityChartComponent implements OnInit{
           console.log(error.message)
         },
         complete: () => {
+          const reportingYear = this.capacityYears.includes(2024) ? 2024 : this.capacityYears[this.capacityYears.length - 1];
+          const yearIndex = this.capacityYears.indexOf(reportingYear);
+          const countryValues = (values: number[]) => this.countries.map((_: string, countryIndex: number) =>
+            values[countryIndex * this.capacityYears.length + yearIndex] ?? 0
+          );
           this.chartCapacity = {
             tooltip: {
                 trigger: 'axis',
@@ -175,7 +182,7 @@ export class CapacityChartComponent implements OnInit{
             xAxis: {
                 type: 'category',
                 axisTick: { show: false },
-                data: this.capacityYears
+                data: this.countries
             },
             yAxis: {
                 type: 'value',
@@ -186,17 +193,22 @@ export class CapacityChartComponent implements OnInit{
                     name: 'Effective Capacity',
                     type: 'bar',
                     barGap: 0,
-                    data: this.effectiveCapacity
+                    data: countryValues(this.effectiveCapacity),
+                    itemStyle: { color: '#6eb5a8', borderRadius: [5, 5, 0, 0] }
                 },
                 {
                     name: 'Installed Capacity',
                     type: 'bar',
-                    data: this.installedCapacity
+                    data: countryValues(this.installedCapacity),
+                    itemStyle: { color: '#123047', borderRadius: [5, 5, 0, 0] }
                 },
                 {
                     name: 'Maximum Demand',
-                    type: 'bar',
-                    data: this.maximumDemand
+                    type: 'line',
+                    data: countryValues(this.maximumDemand),
+                    symbolSize: 9,
+                    lineStyle: { color: '#d99027', width: 3 },
+                    itemStyle: { color: '#d99027' }
                 }
             ]
         };

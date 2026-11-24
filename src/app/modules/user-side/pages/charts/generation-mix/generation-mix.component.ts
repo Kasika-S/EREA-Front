@@ -286,7 +286,12 @@ export class GenerationMixChartComponent implements OnInit{
           series: [
             {
               name: 'Energy Contribution',
-              data: this.yEnergyContribution,
+              data: this.yEnergyContribution.map((value: number, index: number) => ({
+                value,
+                itemStyle: {
+                  color: this.capacitySourceColor(this.xEnergyContribution[index], index),
+                },
+              })),
               type: 'bar', // Changed to bar
               label: {
                 show: true,
@@ -295,9 +300,6 @@ export class GenerationMixChartComponent implements OnInit{
                 fontWeight: 'bold',
                 fontSize: 12
               },
-              itemStyle: {
-                color: '#264a7d' // Bar color
-              }
             }
           ]
         };        
@@ -305,6 +307,23 @@ export class GenerationMixChartComponent implements OnInit{
       }
       }
     )
+  }
+
+  private capacitySourceColor(source: string, index: number): string {
+    const normalizedSource = (source || '').toLowerCase();
+    const sourceColors: Record<string, string> = {
+      hydro: '#2774ae',
+      solar: '#e6a700',
+      wind: '#4f9da6',
+      geothermal: '#b65b3a',
+      biomass: '#5b8c42',
+      thermal: '#bd4f6c',
+      gas: '#6a7890',
+      coal: '#48515c',
+    };
+    const matchingSource = Object.keys(sourceColors).find((key) => normalizedSource.includes(key));
+    const fallbackPalette = ['#123047', '#0e7c78', '#d99027', '#6a4c93', '#bd4f6c'];
+    return matchingSource ? sourceColors[matchingSource] : fallbackPalette[index % fallbackPalette.length];
   }
 
   displayFn(value: any): string {

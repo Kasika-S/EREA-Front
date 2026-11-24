@@ -1,5 +1,6 @@
 import { CommonModule, NgClass } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 
@@ -23,7 +24,7 @@ interface Year {
 @Component({
   selector: 'app-petroleum',
   standalone: true,
-  imports: [CommonModule, NgxEchartsDirective,
+  imports: [CommonModule, RouterLink, NgxEchartsDirective,
       FormsModule,
       ReactiveFormsModule,
       MatIconModule,
